@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\DashBoardController;
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
@@ -35,5 +36,7 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/products/{category}', 'ProductController@category')->name('products.category');
+
+Route::get('/admin/index', [DashBoardController::class, 'index'])->name('admindashboard.index');
 
 require __DIR__.'/auth.php';
