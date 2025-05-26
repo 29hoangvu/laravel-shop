@@ -22,7 +22,7 @@
                     <i class="far fa-star"></i>
                 @endif
             @endfor
-            <span class="text-gray-500 dark:text-gray-400 text-xs ml-2">({{ $product->reviews_count ?? 0 }})</span>
+            <span class="text-gray-500 dark:text-gray-400 text-xs ml-2">({{ $product->stock_quantity ?? 0 }})</span>
         </div>
 
         <!-- Price -->
@@ -32,11 +32,12 @@
 
         <!-- Buttons -->
         <div class="mt-auto flex justify-between items-center gap-2">
-            <button class="bg-sky-500 hover:bg-sky-600 text-white text-sm px-3 py-1.5 rounded-lg flex items-center gap-1 transition"
-                    data-product-id="{{ $product->Product_id }}">
+            <button class="add-to-cart-btn bg-sky-500 hover:bg-sky-600 text-white text-sm px-3 py-1.5 rounded-lg flex items-center gap-1 transition"
+                data-product-id="{{ $product->Product_id }}">
                 <i class="fas fa-cart-plus"></i> Thêm
             </button>
-            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-red-500 text-xl transition"
+
+            <a href="#" class=" text-gray-600 dark:text-gray-300 hover:text-red-500 text-xl transition"
                data-product-id="{{ $product->Product_id }}" data-bs-toggle="tooltip" title="Thêm vào yêu thích">
                 @if(Auth::check() && Auth::user()->favorites->contains($product->Product_id))
                     <i class="fas fa-heart text-red-500"></i>

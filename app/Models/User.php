@@ -16,6 +16,8 @@ class User extends Authenticatable
     public $incrementing = true; // hoặc false nếu khóa không tự tăng
 
     protected $keyType = 'int'; // kiểu dữ liệu của khóa chính
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Auth;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -41,15 +43,37 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $email = $this->input('email');
+        $password = $this->input('password');
+        $role = $this->input('role');
+
+        // Tìm trong bảng tương ứng theo vai trò
+        if ($role === 'user') {
+            $user = DB::table('users')->where('Email', $email)->first();
+        } elseif ($role === 'staff') {
+            $user = DB::table('staff')->where('Email', $email)->first();
+        } else {
+            throw ValidationException::withMessages([
+                'role' => ['Vai trò không hợp lệ.'],
+            ]);
+        }
+
+        // Kiểm tra tồn tại và mật khẩu
+        if (!$user || !Hash::check($password, $user->Password)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => ['Email hoặc mật khẩu không đúng.'],
             ]);
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        // Lưu user "ảo" vào session (vì không dùng model User chuẩn)
+        session([
+            'logged_in_user' => $user,
+            'role' => $role,
+        ]);
     }
 
     /**
