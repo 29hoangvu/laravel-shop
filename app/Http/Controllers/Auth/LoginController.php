@@ -18,19 +18,26 @@ class LoginController extends Controller
         $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
-            'role'     => 'required|in:users,staff',
         ]);
 
         $credentials = $request->only('email', 'password');
-        $guard = $request->role === 'staff' ? 'staff' : 'web';
 
-        if (Auth::guard($guard)->attempt($credentials)) {
+        if (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended($guard === 'staff' ? '/staff/dashboard' : '/dashboard');
+
+            $user = Auth::guard('web')->user();
+
+            if ($user->role === 'staff') {
+                return redirect()->intended('/staff/dashboard');
+            } else {
+                return redirect()->intended('/dashboard');
+            }
         }
 
         return back()->withErrors([
-            'email' => 'Thông tin đăng nhập không đúng.',
-        ]);
+            'email' => 'Email hoặc mật khẩu không đúng.',
+        ])->withInput($request->only('email'));
     }
+
+
 }

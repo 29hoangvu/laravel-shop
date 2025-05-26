@@ -68,7 +68,8 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        'staffs' => [
+
+        'staff' => [
             'driver' => 'eloquent',
             'model' => App\Models\Staff::class,
         ],

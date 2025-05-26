@@ -1,3 +1,5 @@
+import * as bootstrap from 'bootstrap';
+
 // Cart Functions
 function updateCartQuantity(productId, action) {
     $.ajax({
@@ -21,7 +23,7 @@ function addToCartAnimation(button) {
     button.disabled = true;
     const originalText = button.innerHTML;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
-    
+
     setTimeout(function() {
         button.innerHTML = '<i class="fas fa-check"></i> Đã thêm';
         setTimeout(function() {
@@ -40,22 +42,26 @@ function toggleFavoriteAnimation(element, isFavorite) {
     }
 }
 
-// Initialize Tooltips
+// Initialize Tooltips and event handlers
 $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip();
-    
-    // Ensure CSRF token is included in AJAX requests
+    // Khởi tạo tooltip Bootstrap 5 (không dùng jQuery)
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Setup CSRF token for all AJAX requests
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    
-    // Handle Add to Cart button click
-    $('.add-to-cart-btn').on('click', function() {
+
+    // Handle Add to Cart button click (event delegation)
+    $(document).on('click', '.add-to-cart-btn', function () {
         const productId = $(this).data('product-id');
         const button = this;
-        
+
         $.ajax({
             url: '/cart/add',
             type: 'POST',
@@ -67,17 +73,22 @@ $(function () {
                 if (response.success) {
                     addToCartAnimation(button);
                     $('.cart-count').text(response.cartCount);
+                } else {
+                    alert(response.message || 'Có lỗi xảy ra!');
                 }
+            },
+            error: function() {
+                alert('Lỗi mạng hoặc máy chủ.');
             }
         });
     });
-    
-    // Handle Favorite Toggle
-    $('.toggle-favorite').on('click', function(e) {
+
+    // Handle Favorite toggle click
+    $(document).on('click', '.toggle-favorite', function(e) {
         e.preventDefault();
         const productId = $(this).data('product-id');
         const element = this;
-        
+
         $.ajax({
             url: '/favorites/toggle',
             type: 'POST',

@@ -49,7 +49,7 @@
             
             <div class="mb-3">
                 <span class="text-muted">Tình trạng: </span>
-                @if($product->quantity > 0)
+                @if($product->stock_quantity > 0)
                 <span class="text-success">Còn hàng ({{ $product->quantity }})</span>
                 @else
                 <span class="text-danger">Hết hàng</span>
