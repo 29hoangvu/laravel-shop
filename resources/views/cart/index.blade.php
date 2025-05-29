@@ -30,7 +30,7 @@
                                     <img src="{{ $item['product']->image_url ? asset('storage/' . $item['product']->image_url) : asset('images/no-image.jpg') }}"
                                          alt="{{ $item['product']->name }}"
                                          class="w-16 h-16 object-cover rounded-md border" />
-                                    <a href="{{ route('products.show', $item['product']->Product_id) }}"
+                                    <a href="{{ route('products.show', $item['product']->product_id) }}"
                                        class="text-blue-600 hover:underline">
                                         {{ $item['product']->name }}
                                     </a>

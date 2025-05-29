@@ -16,7 +16,7 @@ Cảm ơn bạn đã đặt hàng tại cửa hàng chúng tôi. Dưới đây l
 
 **Phí vận chuyển:** {{ number_format(30000, 0, ',', '.') }} VNĐ 
 
-**Tổng cộng:** {{ number_format($invoice->Total, 0, ',', '.') }} VNĐ
+**Tổng cộng:** {{ number_format($invoice->total, 0, ',', '.') }} VNĐ
 
 Cảm ơn bạn đã tin tưởng và ủng hộ!
 

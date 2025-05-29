@@ -36,9 +36,9 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->Email,
-            'password' => Hash::make($request->Password),
+            'name'     => $request->name,
+            'email'    => $request->email,      // <- đúng: từ form gửi lên là `email`
+            'password' => Hash::make($request->password), // <- đúng: từ form là `password`
         ]);
 
         event(new Registered($user));

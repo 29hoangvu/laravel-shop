@@ -48,26 +48,34 @@ class CheckoutController extends Controller
         // Xử lý người dùng
         if (Auth::check()) {
             $user = Auth::user();
+
+            // Cập nhật thông tin người dùng nếu có thay đổi
+            $user->name = $request->name;
+            $user->phone = $request->phone;
+            $user->email = $request->email;
+            $user->address = $request->address;
+            $user->save();
+
         } else {
-            $user = User::where('Email', $request->email)->first();
+            $user = User::where('email', $request->email)->first();
 
             if (!$user) {
                 $user = User::create([
                     'name'     => $request->name,
-                    'Email'    => $request->email,
+                    'email'    => $request->email,
                     'phone'    => $request->phone,
-                    'Address'  => $request->address,
-                    'Password' => Hash::make('12345678'), // mật khẩu mặc định
+                    'address'  => $request->address,
+                    'password' => Hash::make('12345678'), // mật khẩu mặc định
                 ]);
             }
         }
 
         // Lưu hóa đơn
         $invoice = Invoice::create([
-            'User_id'        => $user->User_id, // đúng tên cột trong CSDL
+            'user_id'        => $user->user_id, // đúng tên cột trong CSDL
             'payment_status' => 'pending',
             'order_status'   => 'new',
-            'Total'          => $total,
+            'total'          => $total,
             'created_at'     => now(),
         ]);
 
@@ -76,8 +84,8 @@ class CheckoutController extends Controller
             $product = Product::find($id);
             if ($product) {
                 InvoiceDetail::create([
-                    'Invoice_id' => $invoice->Invoice_id,
-                    'Product_id' => $product->Product_id,
+                    'invoice_id' => $invoice->invoice_id,
+                    'product_id' => $product->product_id,
                     'quantity'   => $item['quantity'],
                     'price'      => $product->price,
                 ]);
@@ -86,17 +94,17 @@ class CheckoutController extends Controller
 
         // Xử lý thanh toán
         if ($request->payment_method == 'cod') {
-            $details = InvoiceDetail::where('Invoice_id', $invoice->Invoice_id)->get();
-            Mail::to($user->Email)->send(new InvoiceMail($invoice, $details));
+            $details = InvoiceDetail::where('invoice_id', $invoice->invoice_id)->with('product')->get();
+            Mail::to($user->email)->send(new InvoiceMail($invoice, $details));
 
             session()->forget('cart');
-            return redirect()->route('home')->with('success', 'Đặt hàng thành công! Hóa đơn đã gửi về email.');
+            return redirect()->route('home')->with('success', 'Đặt hàng thành công! Hóa đơn đã gửi về email.');      
         } elseif ($request->payment_method == 'vnpay') {
             // Tạo view chứa form tự động gửi đến /vnpay_payment
             return view('vnpay.auto_submit', [
-                'invoice_id' => $invoice->Invoice_id,
+                'invoice_id' => $invoice->invoice_id,
                 'amount'     => $total,
-                'email'      => $user->Email,
+                'email'      => $user->email,
             ]);
         }
 

@@ -14,7 +14,7 @@ class Comment extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'Cmt_id';
+    protected $primaryKey = 'cmt_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -30,9 +30,9 @@ class Comment extends Model
      */
     protected $fillable = [
         'product_id',
-        'User_id',
+        'user_id',
         'rating',
-        'Comment',
+        'comment',
         'create_at',
     ];
 
@@ -50,7 +50,7 @@ class Comment extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'User_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     /**
@@ -58,6 +58,6 @@ class Comment extends Model
      */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'Product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
 }

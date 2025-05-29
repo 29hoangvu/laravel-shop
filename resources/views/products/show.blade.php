@@ -8,7 +8,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
             <li class="breadcrumb-item"><a href="{{ route('products.index') }}">Sản phẩm</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('products.category', $product->Category_id) }}">{{ $product->category->name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('products.category', $product->category_id) }}">{{ $product->category->name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
         </ol>
     </nav>
@@ -32,7 +32,7 @@
             
             <div class="mb-3">
                 <span class="text-muted">Danh mục: </span>
-                <a href="{{ route('products.category', $product->Category_id) }}">{{ $product->category->name }}</a>
+                <a href="{{ route('products.category', $product->category_id) }}">{{ $product->category->name }}</a>
             </div>
             
             <div class="mb-3">
@@ -58,7 +58,7 @@
             
             <form action="{{ route('cart.add') }}" method="POST" class="mb-4">
                 @csrf
-                <input type="hidden" name="product_id" value="{{ $product->Product_id }}">
+                <input type="hidden" name="product_id" value="{{ $product->product_id }}">
                 <div class="row">
                     <div class="col-md-3 col-5">
                         <div class="input-group">
@@ -71,8 +71,8 @@
                         <button type="submit" class="btn btn-primary {{ $product->quantity <= 0 ? 'disabled' : '' }}" {{ $product->quantity <= 0 ? 'disabled' : '' }}>
                             <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
                         </button>
-                        <a href="#" class="btn btn-outline-danger ms-2 toggle-favorite" data-product-id="{{ $product->Product_id }}">
-                            @if(Auth::check() && Auth::user()->favorites->contains($product->Product_id))
+                        <a href="#" class="btn btn-outline-danger ms-2 toggle-favorite" data-product-id="{{ $product->product_id }}">
+                            @if(Auth::check() && Auth::user()->favorites->contains($product->product_id))
                                 <i class="fas fa-heart"></i> Đã yêu thích
                             @else
                                 <i class="far fa-heart"></i> Yêu thích

@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Model
 {
     protected $table = 'invoice';
-    protected $primaryKey = 'Invoice_id';
+    protected $primaryKey = 'invoice_id';
     public $timestamps = false; // vì bạn dùng created_at nhưng không dùng updated_at
 
     protected $fillable = [
-        'User_id', 'payment_status', 'order_status', 'Total', 'created_at'
+        'user_id', 'payment_status', 'order_status', 'total', 'created_at'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'User_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function details()
     {
-        return $this->hasMany(InvoiceDetail::class, 'Invoice_id', 'Invoice_id');
+        return $this->hasMany(InvoiceDetail::class, 'invoice_id', 'invoice_id');
     }
 }

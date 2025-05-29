@@ -41,7 +41,7 @@
                     <ul class="list-group list-group-flush">
                         @foreach($categories as $category)
                         <li class="list-group-item">
-                            <a href="{{ route('products.category', $category->Category_id) }}" class="text-decoration-none">
+                            <a href="{{ route('products.category', $category->category_id) }}" class="text-decoration-none">
                                 {{ $category->name }}
                             </a>
                         </li>

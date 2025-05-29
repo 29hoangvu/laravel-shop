@@ -14,7 +14,7 @@ class Product extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'Product_id';
+    protected $primaryKey = 'product_id';
 
     /**
      * Indicates if the model should be timestamped.
@@ -29,14 +29,14 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'Staff_id',
-        'Category_id',
+        'staff_id',
+        'category_id',
         'name',
         'description',
         'price',
         'stock_quantity',
         'image_url',
-        'Status',
+        'status',
     ];
 
     /**
@@ -44,7 +44,7 @@ class Product extends Model
      */
     public function category()
     {
-        return $this->belongsTo(Category::class, 'Category_id', 'Category_id');
+        return $this->belongsTo(Category::class, 'category_id', 'category_id');
     }
 
     /**
@@ -52,7 +52,7 @@ class Product extends Model
      */
     public function staff()
     {
-        return $this->belongsTo(Staff::class, 'Staff_id', 'Staff_id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'staff_id');
     }
 
     /**
@@ -60,7 +60,7 @@ class Product extends Model
      */
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'product_id', 'Product_id');
+        return $this->hasMany(Comment::class, 'product_id', 'product_id');
     }
 
     /**
@@ -68,7 +68,7 @@ class Product extends Model
      */
     public function favorites()
     {
-        return $this->hasMany(Favorite::class, 'Product_id', 'Product_id');
+        return $this->hasMany(Favorite::class, 'product_id', 'product_id');
     }
 
     /**
@@ -76,7 +76,7 @@ class Product extends Model
      */
     public function invoiceDetails()
     {
-        return $this->hasMany(InvoiceDetail::class, 'Product_id', 'Product_id');
+        return $this->hasMany(InvoiceDetail::class, 'product_id', 'product_id');
     }
 
 }

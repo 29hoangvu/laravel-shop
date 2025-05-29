@@ -22,9 +22,10 @@ class LoginController extends Controller
         ]);
 
         $credentials = [
-            'email'    => $request->email,
-            'password' => $request->password,
+            'email'    => $request->email,    // khớp đúng cột DB
+            'password' => $request->password, // khớp đúng cột DB
         ];
+
 
         $role = $request->role;
 
@@ -40,7 +41,7 @@ class LoginController extends Controller
                 // Đăng nhập thành công user
                 $request->session()->regenerate();
                 session(['role' => 'user']);
-                return redirect()->intended('/user/dashboard');
+                return redirect()->intended('home');
             }
         }
 

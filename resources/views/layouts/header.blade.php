@@ -42,7 +42,7 @@
                         class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded mt-2 z-50 min-w-[150px] text-gray-700">
                         @foreach(App\Models\Category::all() as $category)
                             <li>
-                                <a href="{{ route('products.category', $category->Category_id) }}"
+                                <a href="{{ route('products.category', $category->category_id) }}"
                                    class="block px-4 py-2 hover:bg-gray-100">{{ $category->name }}</a>
                             </li>
                         @endforeach

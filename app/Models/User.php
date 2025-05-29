@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
      protected $table = 'users';
     use HasApiTokens, HasFactory, Notifiable;
-    protected $primaryKey = 'User_id'; // tên cột khóa chính trong bảng
+    protected $primaryKey = 'user_id'; // tên cột khóa chính trong bảng
 
     public $incrementing = true; // hoặc false nếu khóa không tự tăng
 
@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'Email', 'Password', 'Address', 'phone'
+        'name', 'email', 'password', 'address', 'phone'
     ];
 
     /**
@@ -51,19 +51,19 @@ class User extends Authenticatable
     /**
      * Get all favorites for the user.
      */
-    public function favorites()
+    public function favorite()
     {
-        return $this->hasMany(Favorite::class, 'User_id', 'user_id');
+        return $this->hasMany(Favorite::class, 'user_id', 'user_id');
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'User_id', 'user_id');
+        return $this->hasMany(Comment::class, 'user_id', 'user_id');
     }
 
     public function invoices()
     {
-        return $this->hasMany(Invoice::class, 'User_id', 'user_id');
+        return $this->hasMany(Invoice::class, 'user_id', 'user_id');
     }
 
 

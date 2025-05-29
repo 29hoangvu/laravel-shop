@@ -9,43 +9,24 @@ class Favorite extends Model
 {
     use HasFactory;
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
+    protected $table = 'favorite'; // ✅ Tên bảng chính xác
     public $timestamps = true;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'User_id',
-        'Product_id',
-    ];
-
-    /**
-     * The primary key is composite.
-     * Override the hasCompositeKey trait or implement a unique identifier if needed.
-     */
-    protected $primaryKey = null;
+    protected $primaryKey = null; // ✅ Nếu không có cột ID
     public $incrementing = false;
 
-    /**
-     * Get the user that favorited the product.
-     */
+    protected $fillable = [
+        'user_id',
+        'product_id',
+    ];
+
     public function user()
     {
-        return $this->belongsTo(User::class, 'User_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id'); // ✅ Sửa lại cho đúng khóa chính
     }
 
-    /**
-     * Get the product that was favorited.
-     */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'Product_id', 'Product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
 }

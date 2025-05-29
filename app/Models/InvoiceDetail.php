@@ -9,18 +9,18 @@ class InvoiceDetail extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'Invoice_id', 'Product_id', 'quantity', 'price'
+        'invoice_id', 'product_id', 'quantity', 'price'
     ];
 
     public function invoice()
     {
-        return $this->belongsTo(Invoice::class, 'Invoice_id', 'Invoice_id');
+        return $this->belongsTo(Invoice::class, 'invoice_id', 'invoice_id');
     }
 
     public function product()
     {
         // Đây phải là tên khóa ngoại trong bảng invoice_detail và khóa chính bảng products
-        return $this->belongsTo(Product::class, 'Product_id', 'Product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
 }
 

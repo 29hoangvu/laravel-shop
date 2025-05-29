@@ -18,7 +18,7 @@
             <div class="card mb-4">
                 <div class="card-header">Lọc sản phẩm</div>
                 <div class="card-body">
-                    <form action="{{ route('products.category', $category->Category_id) }}" method="GET">
+                    <form action="{{ route('products.category', $category->category_id) }}" method="GET">
                         <div class="mb-3">
                             <label for="sort" class="form-label">Sắp xếp theo</label>
                             <select class="form-select" id="sort" name="sort" onchange="this.form.submit()">
@@ -47,8 +47,8 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         @foreach($categories as $cat)
-                        <li class="list-group-item {{ $cat->Category_id == $category->Category_id ? 'active' : '' }}">
-                            <a href="{{ route('products.category', $cat->Category_id) }}" class="text-decoration-none {{ $cat->Category_id == $category->Category_id ? 'text-white' : '' }}">
+                        <li class="list-group-item {{ $cat->category_id == $category->category_id ? 'active' : '' }}">
+                            <a href="{{ route('products.category', $cat->category_id) }}" class="text-decoration-none {{ $cat->category_id == $category->category_id ? 'text-white' : '' }}">
                                 {{ $cat->name }}
                             </a>
                         </li>
