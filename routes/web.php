@@ -12,18 +12,24 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
-
+use App\Http\Controllers\StaffRegisterController;
 
 
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
-Route::middleware(['role:staff'])->group(function () {
-    Route::get('/staff/dashboard', [StaffController::class, 'dashboard'])->name('staff.dashboard');
-    Route::post('/staff/logout', [StaffController::class, 'logout'])->name('staff.logout');
-});
-Route::middleware(['role:user'])->group(function () {
+
+
+
+// ✅ Nhóm route staff (có auth + role:staff)
+// 🚫 KHÔNG CÓ middleware => ai cũng vào được /staff/dashboard
+Route::get('/staff/dashboard', [StaffController::class, 'dashboard'])->name('staff.dashboard');
+Route::post('/staff/logout', [StaffController::class, 'logout'])->name('staff.logout');
+
+
+// ✅ Nhóm route user (có auth + role:user)
+Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
     Route::post('/user/logout', [UserController::class, 'logout'])->name('user.logout');
 });
@@ -55,9 +61,7 @@ Route::middleware('auth')->group(function () {
 // Giỏ hàng
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-// Cập nhật số lượng
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-// Xoá giỏ hàng
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
 // Toggle yêu thích
@@ -69,6 +73,7 @@ Route::get('/products/search', [ProductController::class, 'search'])->name('prod
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/products/{category}', [ProductController::class, 'category'])->name('products.category');
 
+
 // Admin dashboard
 Route::get('/admin/index', [DashBoardController::class, 'index'])->name('admindashboard.index');
 
@@ -77,3 +82,10 @@ Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
 
 // Auth routes
 require __DIR__.'/auth.php';
+
+// Staff register
+Route::prefix('staff')->name('staff.')->group(function () {
+    Route::get('register', [StaffRegisterController::class, 'showRegisterForm'])->name('register');
+    Route::post('register', [StaffRegisterController::class, 'register']);
+});
+

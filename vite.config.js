@@ -9,6 +9,6 @@ export default defineConfig({
         }),
     ],
     optimizeDeps: {
-        include: ['jquery'],  // bắt buộc phải khai báo jQuery để vite load đúng
+        include: ['jquery'],
     },
 });
