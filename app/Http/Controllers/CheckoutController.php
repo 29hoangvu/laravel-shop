@@ -47,6 +47,7 @@ class CheckoutController extends Controller
 
         // Xử lý người dùng
         if (Auth::check()) {
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             // Cập nhật thông tin người dùng nếu có thay đổi
