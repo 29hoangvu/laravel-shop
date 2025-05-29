@@ -11,12 +11,13 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 
-// Các route mới thêm từ nhánh PjTT-VNPT
-Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+
+
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
 Route::middleware(['role:staff'])->group(function () {
     Route::get('/staff/dashboard', [StaffController::class, 'dashboard'])->name('staff.dashboard');
@@ -70,6 +71,9 @@ Route::get('/products/{category}', [ProductController::class, 'category'])->name
 
 // Admin dashboard
 Route::get('/admin/index', [DashBoardController::class, 'index'])->name('admindashboard.index');
+
+//Payment
+Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
 
 // Auth routes
 require __DIR__.'/auth.php';

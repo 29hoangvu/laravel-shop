@@ -76,6 +76,7 @@ class Product extends Model
      */
     public function invoiceDetails()
     {
-        return $this->hasMany(InvoiceDetail::class, 'product_id', 'Product_id');
+        return $this->hasMany(InvoiceDetail::class, 'Product_id', 'Product_id');
     }
+
 }

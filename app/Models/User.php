@@ -10,8 +10,9 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+     protected $table = 'users';
     use HasApiTokens, HasFactory, Notifiable;
-    protected $primaryKey = 'user_id'; // tên cột khóa chính trong bảng
+    protected $primaryKey = 'User_id'; // tên cột khóa chính trong bảng
 
     public $incrementing = true; // hoặc false nếu khóa không tự tăng
 
@@ -24,11 +25,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'address',
-        'phone',
+        'name', 'Email', 'Password', 'Address', 'phone'
     ];
 
     /**
