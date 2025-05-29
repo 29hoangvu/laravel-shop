@@ -12,8 +12,10 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="app.js"></script>
+    <script src="path/to/app-6-kOYhqQ.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
 <body class="font-sans antialiased bg-light">
@@ -21,7 +23,7 @@
         {{-- Header --}}
         @include('layouts.header')
         @include('layouts.navigation')
-       
+
         {{-- Nội dung trang --}}
         <main class="flex-grow-1 py-4">
             <div class="container">

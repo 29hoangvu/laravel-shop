@@ -4,45 +4,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class Staff extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
-    /**
-     * The primary key for the model.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'Staff_id';
+    protected $table = 'staff';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    protected $primaryKey = 'staff_id';
+
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
-        'Email',
-        'Password',
-        'Address',
+        'email',
+        'password',
+        'address',
         'phone',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
     protected $hidden = [
-        'Password',
+        'password',
     ];
 
-    /**
-     * Get the products added by the staff.
-     */
     public function products()
     {
-        return $this->hasMany(Product::class, 'Staff_id', 'Staff_id');
+        return $this->hasMany(Product::class, 'staff_id', 'staff_id');
     }
 }
