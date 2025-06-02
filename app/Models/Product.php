@@ -66,7 +66,7 @@ class Product extends Model
     /**
      * Get users who favorited this product.
      */
-    public function favorites()
+    public function favorite()
     {
         return $this->hasMany(Favorite::class, 'product_id', 'product_id');
     }

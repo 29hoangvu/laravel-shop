@@ -79,6 +79,7 @@ Route::get('/admin/index', [DashBoardController::class, 'index'])->name('adminda
 
 //Payment
 Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
+Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
 
 // Auth routes
 require __DIR__.'/auth.php';
