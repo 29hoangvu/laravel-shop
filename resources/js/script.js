@@ -104,3 +104,20 @@ $(function () {
         });
     });
 });
+
+function increaseQuantity() {
+    const input = document.getElementById('quantity');
+    const max = parseInt(input.getAttribute('max')) || 99;
+    let value = parseInt(input.value) || 1;
+    if (value < max) {
+        input.value = value + 1;
+    }
+}
+
+function decreaseQuantity() {
+    const input = document.getElementById('quantity');
+    let value = parseInt(input.value) || 1;
+    if (value > 1) {
+        input.value = value - 1;
+    }
+}

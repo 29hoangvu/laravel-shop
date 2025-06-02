@@ -64,7 +64,7 @@
                     </div>
 
                     <!-- Phương thức thanh toán -->
-                    <div class="bg-gray-50 rounded-xl p-4 border">
+                    <div class="bg-gray-50 rounded-xl p-4 border mb-6">
                         <h2 class="text-md font-semibold mb-2">Phương thức thanh toán</h2>
 
                         <label class="flex items-center mb-2 space-x-2">
@@ -77,55 +77,57 @@
                             <span>Thanh toán qua VNPay</span>
                         </label>
                     </div>
-        </div>
 
-        <!-- Đơn hàng -->
-        <div class="space-y-4">
-            <div class="bg-white rounded-xl shadow p-6">
-                <h2 class="text-lg font-semibold mb-4">Đơn hàng của bạn</h2>
-                @php
-                    $cart = session()->get('cart', []);
-                    $total = 0;
-                @endphp
-
-                <div class="space-y-2">
-                    @foreach($cart as $id => $item)
-                        @php 
-                            $product = App\Models\Product::find($id);
-                            if ($product) {
-                                $total += $product->price * $item['quantity'];
-                            }
+                    <!-- Đơn hàng -->
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h2 class="text-lg font-semibold mb-4">Đơn hàng của bạn</h2>
+                        @php
+                            $cart = session()->get('cart', []);
+                            $shippingFee = 30000;
+                            $totalProducts = 0;
                         @endphp
-                        @if($product)
-                            <div class="flex justify-between text-sm">
-                                <span>{{ $product->name }} x {{ $item['quantity'] }}</span>
-                                <span>{{ number_format($product->price * $item['quantity'], 0, ',', '.') }} VNĐ</span>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
 
-                <hr class="my-4">
+                        <div class="space-y-2">
+                            @foreach($cart as $id => $item)
+                                @php 
+                                    $product = App\Models\Product::find($id);
+                                @endphp
+                                @if($product)
+                                    @php
+                                        $subtotal = $product->price * $item['quantity'];
+                                        $totalProducts += $subtotal;
+                                    @endphp
+                                    <div class="flex justify-between text-sm">
+                                        <span>{{ $product->name }} x {{ $item['quantity'] }}</span>
+                                        <span>{{ number_format($subtotal, 0, ',', '.') }} VNĐ</span>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
 
-                <div class="flex justify-between">
-                    <span>Tạm tính:</span>
-                    <span>{{ number_format($total, 0, ',', '.') }} VNĐ</span>
-                </div>
-                <div class="flex justify-between">
-                    <span>Phí vận chuyển:</span>
-                    <span>{{ number_format(30000, 0, ',', '.') }} VNĐ</span>
-                </div>
-                <div class="flex justify-between font-bold text-lg mt-3">
-                    <span>Tổng cộng:</span>
-                    <span>{{ number_format($total + 30000, 0, ',', '.') }} VNĐ</span>
-                </div>
+                        <hr class="my-4">
 
-                <button type="submit"
-                    class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
-                    Đặt hàng
-                </button>
+                        <div class="flex justify-between">
+                            <span>Tạm tính:</span>
+                            <span>{{ number_format($totalProducts, 0, ',', '.') }} VNĐ</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Phí vận chuyển:</span>
+                            <span>{{ number_format($shippingFee, 0, ',', '.') }} VNĐ</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg mt-3">
+                            <span>Tổng cộng:</span>
+                            <span>{{ number_format($totalProducts + $shippingFee, 0, ',', '.') }} VNĐ</span>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                            Đặt hàng
+                        </button>
+                        <input type="hidden" name="total_amount" value="{{ $totalProducts + $shippingFee }}">
+                    </div>
+                </form>
             </div>
-            </form>
         </div>
     </div>
 </div>

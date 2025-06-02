@@ -38,7 +38,7 @@
             </button>
 
             <a href="#" class=" text-gray-600 dark:text-gray-300 hover:text-red-500 text-xl transition"
-               data-product-id="{{ $product->product_id }}" data-bs-toggle="tooltip" title="Thêm vào yêu thích">
+               data-product-id="{{ $product->product_id }}" title="Thêm vào yêu thích">
                 @if(Auth::check() && Auth::user()->favorite->contains($product->product_id))
                     <i class="fas fa-heart text-red-500"></i>
                 @else
