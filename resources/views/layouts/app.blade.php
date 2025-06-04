@@ -22,7 +22,7 @@
     <div class="d-flex flex-column min-vh-100">
         {{-- Header --}}
         @include('layouts.header')
-        @include('layouts.navigation')
+        {{-- @include('layouts.navigation') --}}
 
         {{-- Nội dung trang --}}
         <main class="flex-grow-1 py-4">

@@ -2,6 +2,56 @@
 
 @section('title', $product->name)
 
+@section('scripts')
+<script>
+    function increaseQuantity(button) {
+        const input = button.parentElement.querySelector('.quantity-input');
+        const max = parseInt(input.getAttribute('max'));
+        let value = parseInt(input.value);
+        if (value < max) input.value = value + 1;
+    }
+
+    function decreaseQuantity(button) {
+        const input = button.parentElement.querySelector('.quantity-input');
+        let value = parseInt(input.value);
+        if (value > 1) input.value = value - 1;
+    }
+
+    // Kiểm tra nhập tay số lượng
+    document.querySelector('.quantity-input').addEventListener('input', function() {
+        let value = parseInt(this.value);
+        const max = parseInt(this.getAttribute('max'));
+        if (isNaN(value) || value < 1) this.value = 1;
+        else if (value > max) this.value = max;
+    });
+
+    // Toggle favorite với AJAX
+    document.querySelector('.toggle-favorite').addEventListener('click', function(e) {
+        e.preventDefault();
+        const btn = this;
+        const productId = btn.getAttribute('data-product-id');
+
+        fetch("{{ route('favorites.toggle', '') }}/" + productId, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+            },
+        }).then(res => res.json())
+        .then(data => {
+            if (data.status === 'added') {
+                btn.innerHTML = '<i class="fas fa-heart"></i> Đã yêu thích';
+                btn.classList.remove('text-red-500');
+                btn.classList.add('text-red-700');
+            } else {
+                btn.innerHTML = '<i class="far fa-heart"></i> Yêu thích';
+                btn.classList.remove('text-red-700');
+                btn.classList.add('text-red-500');
+            }
+        });
+    });
+</script>
+@endsection
 @section('content')
 <div class="container mx-auto px-4 py-8">
     {{-- Breadcrumb --}}
@@ -58,10 +108,10 @@
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->product_id }}">
                 <div class="flex items-center gap-3">
-                    <button type="button" onclick="decreaseQuantity()" class="px-3 py-1 bg-gray-200 rounded">-</button>
+                    <button type="button" onclick="decreaseQuantity(this)" class="px-3 py-1 bg-gray-200 rounded">-</button>
                     <input type="number" class="quantity-input w-16 text-center border border-gray-300 rounded"
-                           name="quantity" value="1" min="1" max="{{ $product->stock_quantity }}">
-                    <button type="button" onclick="increaseQuantity()" class="px-3 py-1 bg-gray-200 rounded">+</button>
+                        name="quantity" value="1" min="1" max="{{ $product->stock_quantity }}">
+                    <button type="button" onclick="increaseQuantity(this)" class="px-3 py-1 bg-gray-200 rounded">+</button>
                 </div>
 
                 <div class="flex gap-4">
@@ -71,7 +121,7 @@
                     </button>
 
                     <a href="#" class="flex items-center gap-1 px-4 py-2 border rounded text-red-500 border-red-500 hover:bg-red-100 transition toggle-favorite"
-                       data-product-id="{{ $product->product_id }}">
+                    data-product-id="{{ $product->product_id }}">
                         @if(Auth::check() && Auth::user()->favorite->contains($product->product_id))
                             <i class="fas fa-heart"></i> Đã yêu thích
                         @else
@@ -111,21 +161,4 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-<script>
-    function increaseQuantity() {
-        const input = document.querySelector('.quantity-input');
-        const max = parseInt(input.getAttribute('max'));
-        let value = parseInt(input.value);
-        if (value < max) input.value = value + 1;
-    }
-
-    function decreaseQuantity() {
-        const input = document.querySelector('.quantity-input');
-        let value = parseInt(input.value);
-        if (value > 1) input.value = value - 1;
-    }
-</script>
 @endsection

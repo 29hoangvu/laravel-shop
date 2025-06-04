@@ -13,13 +13,14 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StaffRegisterController;
-
+use App\Http\Controllers\OrderController;
 
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
 
+Route::get('/orders', [OrderController::class, 'index'])->name('orders');
 
 
 // ✅ Nhóm route staff (có auth + role:staff)

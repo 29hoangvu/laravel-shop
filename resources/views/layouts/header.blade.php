@@ -103,10 +103,9 @@
                                    class="block px-4 py-2 hover:bg-gray-100">Tài khoản</a></li>
                             <li><a href="{{ route('favorites') }}"
                                    class="block px-4 py-2 hover:bg-gray-100">Yêu thích</a></li>
-                            @if(Auth::user()->email === 'admin@example.com')
-                                <li><a href="{{ route('admin.dashboard') }}"
-                                       class="block px-4 py-2 hover:bg-gray-100">Quản trị</a></li>
-                            @endif
+                            <li><hr class="my-1 border-gray-200"></li>
+                            <li><a href="{{ route('orders') }}"
+                                   class="block px-4 py-2 hover:bg-gray-100">Đơn hàng</a></li>
                             <li><hr class="my-1 border-gray-200"></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST">
