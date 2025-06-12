@@ -92,7 +92,8 @@ CREATE TABLE `comment` (
 
 CREATE TABLE `favorite` (
   `user_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL
+  `category_id` int(11) NOT NULL,
+  `score` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -317,8 +318,8 @@ ALTER TABLE `comment`
 -- Indexes for table `favorite`
 --
 ALTER TABLE `favorite`
-  ADD PRIMARY KEY (`user_id`,`product_id`),
-  ADD KEY `FK_FAVORITE_RELATIONS_PRODUCTS` (`product_id`);
+  ADD PRIMARY KEY (`user_id`,`category_id`),
+  ADD KEY `FK_FAVORITE_RELATIONS_CATEGORI` (`category_id`);
 
 --
 -- Indexes for table `invoice`
@@ -451,7 +452,7 @@ ALTER TABLE `comment`
 -- Constraints for table `favorite`
 --
 ALTER TABLE `favorite`
-  ADD CONSTRAINT `FK_FAVORITE_RELATIONS_PRODUCTS` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
+  ADD CONSTRAINT `FK_FAVORITE_RELATIONS_CATEGORI` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`),
   ADD CONSTRAINT `FK_FAVORITE_RELATIONS_USER` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --

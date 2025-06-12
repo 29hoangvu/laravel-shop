@@ -24,4 +24,12 @@ class Category extends Model
     {
         return $this->hasMany(Product::class, 'category_id', 'category_id');
     }
+
+    /**
+     * Get users who favorited this category.
+     */
+    public function favorite()
+    {
+        return $this->hasMany(Favorite::class, 'category_id', 'category_id');
+    }
 }
