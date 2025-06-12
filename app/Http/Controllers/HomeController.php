@@ -8,8 +8,6 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Favorite;
 
-
-
 class HomeController extends Controller
 {
     public function index()
@@ -29,7 +27,7 @@ class HomeController extends Controller
         $recommendedProducts = collect();
 
         if (Auth::check()) {
-            $user = Auth::user(); // Đây là đối tượng model User đầy đủ
+            $user = Auth::user();
 
             $topCategoryId = $user->favorite()
                 ->orderByDesc('score')

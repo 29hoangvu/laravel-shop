@@ -9,21 +9,21 @@ class Favorite extends Model
 {
     use HasFactory;
 
-    protected $table = 'favorite'; // ✅ Tên bảng chính xác
+    protected $table = 'favorite'; // ✅ Tên bảng
     public $timestamps = true;
 
-    protected $primaryKey = null; // ✅ Nếu không có cột ID
+    protected $primaryKey = null; // ✅ Không có cột id
     public $incrementing = false;
 
     protected $fillable = [
         'user_id',
         'category_id',
-        'score'
+        'score',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id'); // ✅ Sửa lại cho đúng khóa chính
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     public function category()

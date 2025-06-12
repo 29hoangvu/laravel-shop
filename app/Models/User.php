@@ -10,13 +10,12 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    protected $table = 'users';
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected $table = 'users';
     protected $primaryKey = 'user_id'; // tên cột khóa chính trong bảng
-
-    public $incrementing = true; // hoặc false nếu khóa không tự tăng
-
-    protected $keyType = 'int'; // kiểu dữ liệu của khóa chính
+    public $incrementing = true;
+    protected $keyType = 'int';
     public $timestamps = false;
 
     /**
@@ -60,6 +59,9 @@ class User extends Authenticatable
         return $this->hasMany(Favorite::class, 'user_id', 'user_id');
     }
 
+    /**
+     * Get categories favorited by the user.
+     */
     public function favoriteCategories()
     {
         return $this->belongsToMany(Category::class, 'favorites')->withPivot('score');
