@@ -13,7 +13,14 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StaffRegisterController;
+<<<<<<< HEAD
 use App\Http\Controllers\OrderController;
+=======
+use App\Http\Controllers\Admin\ProductCrudController;
+use App\Http\Controllers\Admin\StaffCrudController;
+use App\Http\Controllers\Admin\CategoryCrudController;
+use App\Http\Controllers\Admin\InvoiceCrudController;
+>>>>>>> ab72cc6 (Cap nhat admin)
 
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
@@ -76,8 +83,41 @@ Route::get('/products/{category}', [ProductController::class, 'category'])->name
 
 
 // Admin dashboard
-Route::get('/admin/index', [DashBoardController::class, 'index'])->name('admindashboard.index');
+Route::get('/admin/index', [DashBoardController::class, 'index'])->name('admin.home.index');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/products', [ProductCrudController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [ProductCrudController::class, 'create'])->name('products.create'); // Route mới được thêm
+    Route::post('/products', [ProductCrudController::class, 'store'])->name('products.store');
+    Route::get('/products/{id}', [ProductCrudController::class, 'show'])->name('products.show');
+    Route::get('/products/{id}/edit', [ProductCrudController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{id}', [ProductCrudController::class, 'update'])->name('products.update');
+    Route::delete('/products/{id}', [ProductCrudController::class, 'destroy'])->name('products.destroy');
 
+    Route::get('/staff', [StaffCrudController::class, 'index'])->name('staff.index');
+    Route::get('/staff/create', [StaffCrudController::class, 'create'])->name('staff.create');// Route mới được thêm
+    Route::post('/staff', [StaffCrudController::class, 'store'])->name('staff.store');
+    Route::get('/staff/{id}', [StaffCrudController::class, 'show'])->name('staff.show');
+    Route::get('/staff/{id}/edit', [StaffCrudController::class, 'edit'])->name('staff.edit');
+    Route::put('/staff/{id}', [StaffCrudController::class, 'update'])->name('staff.update');
+    Route::delete('/staff/{id}', [StaffCrudController::class, 'destroy'])->name('staff.destroy');
+
+    Route::get('/category', [CategoryCrudController::class, 'index'])->name('category.index');
+    Route::get('/category/create', [CategoryCrudController::class, 'create'])->name('category.create');// Route mới được thêm
+    Route::post('/category', [CategoryCrudController::class, 'store'])->name('category.store');
+    Route::get('/category/{id}', [CategoryCrudController::class, 'show'])->name('category.show');
+    Route::get('/category/{id}/edit', [CategoryCrudController::class, 'edit'])->name('category.edit');
+    Route::put('/category/{id}', [CategoryCrudController::class, 'update'])->name('category.update');
+    Route::delete('/category/{id}', [CategoryCrudController::class, 'destroy'])->name('category.destroy');
+
+    Route::get('/invoice', [InvoiceCrudController::class, 'index'])->name('invoice.index');
+    Route::get('/invoice/create', [InvoiceCrudController::class, 'create'])->name('invoice.create');// Route mới được thêm
+    Route::post('/invoice', [InvoiceCrudController::class, 'store'])->name('invoice.store');
+    Route::get('/invoice/{id}', [InvoiceCrudController::class, 'show'])->name('invoice.show');
+    Route::get('/invoice/{id}/edit', [InvoiceCrudController::class, 'edit'])->name('invoice.edit');
+    Route::put('/invoice/{id}', [InvoiceCrudController::class, 'update'])->name('invoice.update');
+    Route::delete('/invoice/{id}', [InvoiceCrudController::class, 'destroy'])->name('invoice.destroy');
+    
+});
 //Payment
 Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);
 Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');

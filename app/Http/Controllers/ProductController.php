@@ -108,9 +108,15 @@ class ProductController extends Controller
 
 
         $relatedProducts = Product::where('Category_id', $product->Category_id)
+<<<<<<< HEAD
             ->where('Product_id', '!=', $id)
             ->take(4)
             ->get();
+=======
+                                ->where('Product_id', '!=', $id)
+                                ->take(4)
+                                ->get();
+>>>>>>> ab72cc6 (Cap nhat admin)
 
         return view('products.show', compact('product', 'relatedProducts'));
     }
@@ -126,9 +132,18 @@ class ProductController extends Controller
         $query = $request->input('q');
 
         $products = Product::where('name', 'like', "%{$query}%")
+<<<<<<< HEAD
             ->orWhere('description', 'like', "%{$query}%")
             ->paginate(12);
 
         return view('products.search', compact('products', 'query'));
     }
+=======
+                        ->orWhere('description', 'like', "%{$query}%")
+                        ->paginate(12);
+
+        return view('products.search', compact('products', 'query'));
+    }
+    
+>>>>>>> ab72cc6 (Cap nhat admin)
 }
