@@ -10,9 +10,9 @@ class Favorite extends Model
     use HasFactory;
 
     protected $table = 'favorite'; // ✅ Tên bảng
-    public $timestamps = true;
+    public $timestamps = false;
 
-    protected $primaryKey = null; // ✅ Không có cột id
+    
     public $incrementing = false;
 
     protected $fillable = [
