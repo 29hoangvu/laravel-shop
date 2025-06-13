@@ -8,7 +8,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h1 class="card-title">Chi tiết Hóa đơn #{{ $invoice->Invoice_id }}</h1>
+                    <h1 class="card-title">Chi tiết Hóa đơn #{{ $invoice->invoice_id }}</h1>
                     <a href="{{ route('admin.invoice.index') }}" class="btn btn-secondary">
                         <i class="fa fa-arrow-left"></i> Quay lại
                     </a>
@@ -79,7 +79,7 @@
                                     <table class="table table-borderless table-sm">
                                         <tr>
                                             <td><strong>Mã hóa đơn:</strong></td>
-                                            <td>#{{ $invoice->Invoice_id }}</td>
+                                            <td>#{{ $invoice->invoice_id }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Ngày tạo:</strong></td>
@@ -118,7 +118,7 @@
                                     </thead>
                                     <tbody>
                                         @php $total = 0; @endphp
-                                        @foreach ($invoice->invoiceDetails as $index => $detail)
+                                        @foreach ($invoice->details as $index => $detail)
                                             @php
                                                 $subtotal = $detail->price * $detail->quantity;
                                                 $total += $subtotal;
@@ -154,7 +154,7 @@
                             <h5 class="mb-0"><i class="fa fa-edit"></i> Cập nhật trạng thái hóa đơn</h5>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('admin.invoice.update', $invoice->Invoice_id) }}" method="POST" id="updateInvoiceForm">
+                            <form action="{{ route('admin.invoice.update', $invoice->invoice_id) }}" method="POST" id="updateInvoiceForm">
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
@@ -292,5 +292,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.value = '{{ $invoice->order_status }}'; // Reset to original
             }
         } else if (value === 'delivered') {
-            //
+
+</script>          //
 @endsection

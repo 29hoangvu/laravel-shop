@@ -9,18 +9,15 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DashBoardController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StaffRegisterController;
-<<<<<<< HEAD
-use App\Http\Controllers\OrderController;
-=======
 use App\Http\Controllers\Admin\ProductCrudController;
 use App\Http\Controllers\Admin\StaffCrudController;
 use App\Http\Controllers\Admin\CategoryCrudController;
 use App\Http\Controllers\Admin\InvoiceCrudController;
->>>>>>> ab72cc6 (Cap nhat admin)
 
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
@@ -116,7 +113,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/invoice/{id}/edit', [InvoiceCrudController::class, 'edit'])->name('invoice.edit');
     Route::put('/invoice/{id}', [InvoiceCrudController::class, 'update'])->name('invoice.update');
     Route::delete('/invoice/{id}', [InvoiceCrudController::class, 'destroy'])->name('invoice.destroy');
-    
+    Route::get('/admin/invoice/{id}', [InvoiceCrudController::class, 'show'])->name('admin.invoice.show');
 });
 //Payment
 Route::post('/vnpay_payment', [PaymentController::class, 'vnpay_payment']);

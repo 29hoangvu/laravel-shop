@@ -37,7 +37,7 @@
                 @endif
                 @foreach ($invoices as $invoice)
                     <tr>
-                        <td>{{ $invoice->Invoice_id }}</td>
+                        <td>{{ $invoice->invoice_id }}</td>
                         <td>{{ $invoice->user->name ?? 'N/A' }}</td>
                         <td>{{ $invoice->user->email ?? 'N/A' }}</td>
                         <td>{{ $invoice->created_at ? $invoice->created_at->format('d/m/Y H:i') : 'N/A' }}</td>
@@ -85,11 +85,11 @@
                             @endswitch
                         </td>
                         <td>
-                            <a href="{{ route('admin.invoice.edit', $invoice->Invoice_id) }}"
+                            <a href="{{ route('admin.invoice.edit', $invoice->invoice_id) }}"
                                 class="btn btn-sm btn-warning" title="Chỉnh sửa">
                                 <i class="fa fa-edit"></i>
                             </a>
-                           
+
 
                         </td>
                     </tr>
