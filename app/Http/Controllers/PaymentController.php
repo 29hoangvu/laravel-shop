@@ -1,78 +1,123 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
-
+use App\Models\Invoice;
+use App\Models\InvoiceDetail;
+use App\Models\Product;
+use App\Models\User;
+use App\Mail\InvoiceMail;
 class PaymentController extends Controller
 {
-    public function vnpay_payment(){
-    
-    $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    $vnp_Returnurl = "https://localhost/vnpay_php/vnpay_return.php";
-    $vnp_TmnCode = "GC5D1BPG";//Mã website tại VNPAY 
-    $vnp_HashSecret = "57SLGFSYCL93QRKR6SUQ0CH5ISNQ5A0B"; //Chuỗi bí mật
-    
-    $vnp_TxnRef = "100000"; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNpay
-    $vnp_OrderInfo = "Thanh toán hóa đơn";
-    $vnp_OrderType = "Laravel Shop";
-    $vnp_Amount = 100000 * 100;
-    $vnp_Locale = "VN";
-    $vnp_BankCode = "NCB";
-    $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
-    
-    $inputData = array(
-        "vnp_Version" => "2.1.0",
-        "vnp_TmnCode" => $vnp_TmnCode,
-        "vnp_Amount" => $vnp_Amount,
-        "vnp_Command" => "pay",
-        "vnp_CreateDate" => date('YmdHis'),
-        "vnp_CurrCode" => "VND",
-        "vnp_IpAddr" => $vnp_IpAddr,
-        "vnp_Locale" => $vnp_Locale,
-        "vnp_OrderInfo" => $vnp_OrderInfo,
-        "vnp_OrderType" => $vnp_OrderType,
-        "vnp_ReturnUrl" => $vnp_Returnurl,
-        "vnp_TxnRef" => $vnp_TxnRef,
-    );
-    
-    if (isset($vnp_BankCode) && $vnp_BankCode != "") {
-        $inputData['vnp_BankCode'] = $vnp_BankCode;
-    }
-    if (isset($vnp_Bill_State) && $vnp_Bill_State != "") {
-        $inputData['vnp_Bill_State'] = $vnp_Bill_State;
-    }
-    
-    //var_dump($inputData);
-    ksort($inputData);
-    $query = "";
-    $i = 0;
-    $hashdata = "";
-    foreach ($inputData as $key => $value) {
-        if ($i == 1) {
-            $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
-        } else {
-            $hashdata .= urlencode($key) . "=" . urlencode($value);
-            $i = 1;
+    public function checkout(Request $request)
+    {
+        $paymentMethod = $request->input('payment_method');
+
+        if ($paymentMethod === 'vnpay') {
+            return $this->vnpay_payment($request);
         }
-        $query .= urlencode($key) . "=" . urlencode($value) . '&';
+
+        return redirect()->route('home')->with('success', 'Đặt hàng thành công (COD)');
     }
-    
-    $vnp_Url = $vnp_Url . "?" . $query;
-    if (isset($vnp_HashSecret)) {
-        $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//  
-        $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
-    }
-    $returnData = array('code' => '00'
-        , 'message' => 'success'
-        , 'data' => $vnp_Url);
-        if (isset($_POST['redirect'])) {
-            header('Location: ' . $vnp_Url);
-            die();
-        } else {
-            echo json_encode($returnData);
+
+    public function vnpay_payment(Request $request)
+    {
+        $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+        $vnp_Returnurl = route('vnpay.return');
+        $vnp_TmnCode = "GC5D1BPG";
+        $vnp_HashSecret = "57SLGFSYCL93QRKR6SUQ0CH5ISNQ5A0B";
+
+        // Lấy tổng tiền từ session
+        $cart_total = session('total_amount');
+        if (!$cart_total) {
+            return redirect()->route('home')->with('error', 'Không tìm thấy số tiền để thanh toán.');
         }
-        // vui lòng tham khảo thêm tại code demo
-    
+
+        $amount = $cart_total * 100; // VNPay yêu cầu đơn vị là VND * 100
+        $invoiceId = $request->input('invoice_id'); // Lấy invoice_id từ form
+
+        $inputData = [
+            "vnp_Version" => "2.1.0",
+            "vnp_TmnCode" => $vnp_TmnCode,
+            "vnp_Amount" => $amount,
+            "vnp_Command" => "pay",
+            "vnp_CreateDate" => date('YmdHis'),
+            "vnp_CurrCode" => "VND",
+            "vnp_IpAddr" => $request->ip(),
+            "vnp_Locale" => "vn",
+            "vnp_OrderInfo" => "Thanh toán đơn hàng #" . $invoiceId,
+            "vnp_OrderType" => "billpayment",
+            "vnp_ReturnUrl" => $vnp_Returnurl . '?invoice_id=' . $invoiceId,
+            "vnp_TxnRef" => $invoiceId,
+            "vnp_BankCode" => "NCB",
+        ];
+
+        ksort($inputData);
+
+        $hashData = '';
+        foreach ($inputData as $key => $value) {
+            $hashData .= urlencode($key) . '=' . urlencode($value) . '&';
+        }
+        $hashData = rtrim($hashData, '&');
+
+        $vnp_SecureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+
+        $paymentUrl = $vnp_Url . '?' . http_build_query($inputData) . '&vnp_SecureHash=' . $vnp_SecureHash;
+
+        return redirect($paymentUrl);
     }
+
+    public function vnpayReturn(Request $request)
+    {
+        if ($request->vnp_ResponseCode == '00') {
+            $userId = session('checkout_user_id');
+            $cart = session('checkout_cart');
+            $total = session('checkout_total');
+
+            if (!$userId || !$cart || !$total) {
+                return redirect()->route('home')->with('error', 'Không tìm thấy thông tin đơn hàng.');
+            }
+
+            // Tạo đơn hàng
+            $invoice = Invoice::create([
+                'user_id'        => $userId,
+                'payment_status' => 'paid',
+                'order_status'   => 'processing',
+                'total'          => $total,
+                'created_at'     => now(),
+            ]);
+
+            foreach ($cart as $id => $item) {
+                $product = Product::find($id);
+                if ($product) {
+                    InvoiceDetail::create([
+                        'invoice_id' => $invoice->invoice_id,
+                        'product_id' => $product->product_id,
+                        'quantity'   => $item['quantity'],
+                        'price'      => $product->price,
+                    ]);
+                }
+            }
+
+            // Gửi mail hóa đơn
+            $user = User::find($userId);
+            if ($user) {
+                $details = InvoiceDetail::where('invoice_id', $invoice->invoice_id)->with('product')->get();
+                Mail::to($user->email)->send(new InvoiceMail($invoice, $details));
+            }
+
+            // Xóa session
+            session()->forget('cart');
+            session()->forget('total_amount');
+            session()->forget('checkout_cart');
+            session()->forget('checkout_user_id');
+            session()->forget('checkout_total');
+
+            return redirect()->route('home')->with('success', 'Thanh toán VNPay thành công, đơn hàng đã được tạo!');
+        }
+
+        return redirect()->route('home')->with('error', 'Thanh toán thất bại hoặc bị hủy! Đơn hàng chưa được tạo.');
+    }
+
 }

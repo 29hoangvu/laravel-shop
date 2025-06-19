@@ -7,13 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = null; // Không sử dụng updated_at
+
     use HasFactory;
 
-    /**
-     * The primary key for the model.
-     *
-     * @var string
-     */
     protected $primaryKey = 'product_id';
 
     /**
@@ -21,13 +19,8 @@ class Product extends Model
      *
      * @var bool
      */
-    public $timestamps = true;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+
     protected $fillable = [
         'staff_id',
         'category_id',
@@ -64,19 +57,10 @@ class Product extends Model
     }
 
     /**
-     * Get users who favorited this product.
-     */
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class, 'product_id', 'product_id');
-    }
-
-    /**
      * Get invoice details containing this product.
      */
     public function invoiceDetails()
     {
         return $this->hasMany(InvoiceDetail::class, 'product_id', 'product_id');
     }
-
 }

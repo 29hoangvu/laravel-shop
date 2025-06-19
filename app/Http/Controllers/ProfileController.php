@@ -12,17 +12,51 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Hiển thị trang chỉnh sửa profile, mặc định mở mục 'info'
      */
     public function edit(Request $request): View
     {
         return view('profile.edit', [
             'user' => $request->user(),
+            'section' => 'info', // Mặc định mở phần chỉnh sửa thông tin
         ]);
     }
 
     /**
-     * Update the user's profile information.
+     * Mục chỉnh sửa thông tin user
+     */
+    public function editInfo(Request $request): View
+    {
+        return view('profile.edit', [
+            'user' => $request->user(),
+            'section' => 'info',
+        ]);
+    }
+
+    /**
+     * Mục chỉnh sửa mật khẩu
+     */
+    public function editPassword(Request $request): View
+    {
+        return view('profile.edit', [
+            'user' => $request->user(),
+            'section' => 'password',
+        ]);
+    }
+
+    /**
+     * Mục xóa tài khoản
+     */
+    public function editDelete(Request $request): View
+    {
+        return view('profile.edit', [
+            'user' => $request->user(),
+            'section' => 'delete',
+        ]);
+    }
+
+    /**
+     * Cập nhật thông tin profile
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -38,7 +72,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Delete the user's account.
+     * Xóa tài khoản user
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -55,11 +89,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::route('login.user');
     }
-    public function show()
-    {
-        return view('profile.show');
-    }
-
 }

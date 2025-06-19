@@ -1,7 +1,7 @@
 <header class="bg-white shadow-md">
     <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
         <!-- Logo -->
-        <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600 hover:text-blue-800 transition">Shop Laravel</a>
+        <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600 hover:text-blue-800 transition">Digital Shop</a>
 
         <!-- Mobile Toggle -->
         <button class="lg:hidden text-gray-700 focus:outline-none" id="navbar-toggle">
@@ -83,7 +83,7 @@
 
                 <!-- User -->
                 @guest
-                    <li><a href="{{ route('login') }}"
+                    <li><a href="{{ route('login.user') }}"
                            class="hover:text-blue-600">Đăng nhập</a></li>
                     <li><a href="{{ route('register') }}"
                            class="hover:text-blue-600">Đăng ký</a></li>
@@ -99,14 +99,12 @@
                         </a>
                         <ul
                             class="absolute right-0 hidden group-hover:block bg-white shadow-md mt-2 rounded min-w-[150px] text-gray-700 z-50">
-                            <li><a href="{{ route('profile') }}"
+                            <li><a href="{{ route('profile.edit') }}"
                                    class="block px-4 py-2 hover:bg-gray-100">Tài khoản</a></li>
-                            <li><a href="{{ route('favorites') }}"
+                            <li><a href="{{ route('favorites.index') }}"
                                    class="block px-4 py-2 hover:bg-gray-100">Yêu thích</a></li>
-                            @if(Auth::user()->email === 'admin@example.com')
-                                <li><a href="{{ route('admin.dashboard') }}"
-                                       class="block px-4 py-2 hover:bg-gray-100">Quản trị</a></li>
-                            @endif
+                                   <li><a href="{{ route('orders') }}"
+                                   class="block px-4 py-2 hover:bg-gray-100">Đơn hàng</a></li>
                             <li><hr class="my-1 border-gray-200"></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST">

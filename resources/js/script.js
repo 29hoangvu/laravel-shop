@@ -1,64 +1,47 @@
 import $ from 'jquery';
 import * as bootstrap from 'bootstrap';
 
-// Cart Functions
-function updateCartQuantity(productId, action) {
-    $.ajax({
-        url: '/cart/update',
-        type: 'POST',
-        data: {
-            product_id: productId,
-            action: action,
-            _token: $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            if (response.success) {
-                location.reload();
-            }
-        }
-    });
-}
-
-// Add to Cart Animation
-function addToCartAnimation(button) {
-    button.disabled = true;
-    const originalText = button.innerHTML;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
-
-    setTimeout(function() {
-        button.innerHTML = '<i class="fas fa-check"></i> Đã thêm';
-        setTimeout(function() {
-            button.innerHTML = originalText;
-            button.disabled = false;
-        }, 1000);
-    }, 700);
-}
-
-// Toggle Favorite Animation
-function toggleFavoriteAnimation(element, isFavorite) {
-    if (isFavorite) {
-        element.innerHTML = '<i class="fas fa-heart text-danger"></i>';
-    } else {
-        element.innerHTML = '<i class="far fa-heart"></i>';
-    }
-}
-
-// Initialize Tooltips and event handlers
+// Khởi tạo tooltip Bootstrap 5
 $(function () {
-    // Khởi tạo tooltip Bootstrap 5 (không dùng jQuery)
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    // Setup CSRF token for all AJAX requests
+    // Setup CSRF token cho tất cả các request AJAX
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
 
-    // Handle Add to Cart button click (event delegation)
+    // Xử lý nút tăng giảm số lượng trong giỏ hàng
+    $(document).on('click', '.cart-update-btn', function(e) {
+        e.preventDefault();
+        const productId = $(this).data('product-id');
+        const action = $(this).data('action');
+
+        $.ajax({
+            url: '/cart/update',
+            type: 'POST',
+            data: {
+                product_id: productId,
+                action: action
+            },
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert('Cập nhật giỏ hàng thất bại');
+                }
+            },
+            error: function() {
+                alert('Lỗi kết nối server');
+            }
+        });
+    });
+
+    // Xử lý nút Thêm vào giỏ hàng
     $(document).on('click', '.add-to-cart-btn', function () {
         const productId = $(this).data('product-id');
         const button = this;
@@ -84,7 +67,22 @@ $(function () {
         });
     });
 
-    // Handle Favorite toggle click
+    // Hàm animation thêm giỏ hàng
+    function addToCartAnimation(button) {
+        button.disabled = true;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
+
+        setTimeout(function() {
+            button.innerHTML = '<i class="fas fa-check"></i> Đã thêm';
+            setTimeout(function() {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1000);
+        }, 700);
+    }
+
+    // Toggle yêu thích (favorite)
     $(document).on('click', '.toggle-favorite', function(e) {
         e.preventDefault();
         const productId = $(this).data('product-id');
@@ -93,12 +91,14 @@ $(function () {
         $.ajax({
             url: '/favorites/toggle',
             type: 'POST',
-            data: {
-                product_id: productId
-            },
+            data: { product_id: productId },
             success: function(response) {
                 if (response.success) {
-                    toggleFavoriteAnimation(element, response.isFavorite);
+                    if (response.isFavorite) {
+                        element.innerHTML = '<i class="fas fa-heart text-danger"></i>';
+                    } else {
+                        element.innerHTML = '<i class="far fa-heart"></i>';
+                    }
                 }
             }
         });

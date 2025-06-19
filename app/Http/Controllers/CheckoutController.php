@@ -45,70 +45,76 @@ class CheckoutController extends Controller
         }
         $total += 30000; // Phí vận chuyển
 
+        // Lưu tổng tiền vào session
+        session()->put('total_amount', $total);
+
         // Xử lý người dùng
         if (Auth::check()) {
             /** @var \App\Models\User $user */
             $user = Auth::user();
-
-            // Cập nhật thông tin người dùng nếu có thay đổi
             $user->name = $request->name;
             $user->phone = $request->phone;
             $user->email = $request->email;
             $user->address = $request->address;
             $user->save();
-
         } else {
             $user = User::where('email', $request->email)->first();
-
             if (!$user) {
                 $user = User::create([
                     'name'     => $request->name,
                     'email'    => $request->email,
                     'phone'    => $request->phone,
                     'address'  => $request->address,
-                    'password' => Hash::make('12345678'), // mật khẩu mặc định
+                    'password' => Hash::make('12345678'),
                 ]);
             }
         }
 
-        // Lưu hóa đơn
-        $invoice = Invoice::create([
-            'user_id'        => $user->user_id, // đúng tên cột trong CSDL
-            'payment_status' => 'pending',
-            'order_status'   => 'new',
-            'total'          => $total,
-            'created_at'     => now(),
-        ]);
-
-        // Lưu chi tiết hóa đơn
-        foreach ($cart as $id => $item) {
-            $product = Product::find($id);
-            if ($product) {
-                InvoiceDetail::create([
-                    'invoice_id' => $invoice->invoice_id,
-                    'product_id' => $product->product_id,
-                    'quantity'   => $item['quantity'],
-                    'price'      => $product->price,
-                ]);
-            }
-        }
-
-        // Xử lý thanh toán
         if ($request->payment_method == 'cod') {
+            // Tạo đơn hàng ngay
+            $invoice = Invoice::create([
+                'user_id'        => $user->user_id,
+                'payment_status' => 'pending',
+                'order_status'   => 'pending',
+                'total'          => $total,
+                'created_at'     => now(),
+            ]);
+
+            foreach ($cart as $id => $item) {
+                $product = Product::find($id);
+                if ($product) {
+                    InvoiceDetail::create([
+                        'invoice_id' => $invoice->invoice_id,
+                        'product_id' => $product->product_id,
+                        'quantity'   => $item['quantity'],
+                        'price'      => $product->price,
+                    ]);
+                }
+            }
+
             $details = InvoiceDetail::where('invoice_id', $invoice->invoice_id)->with('product')->get();
             Mail::to($user->email)->send(new InvoiceMail($invoice, $details));
 
             session()->forget('cart');
-            return redirect()->route('home')->with('success', 'Đặt hàng thành công! Hóa đơn đã gửi về email.');      
-        } elseif ($request->payment_method == 'vnpay') {
-            // Tạo view chứa form tự động gửi đến /vnpay_payment
+            session()->forget('total_amount');
+
+            return redirect()->route('home')->with('success', 'Đặt hàng thành công! Hóa đơn đã gửi về email.');
+        }
+
+        if ($request->payment_method == 'vnpay') {
+            // Lưu thông tin tạm vào session để dùng khi callback
+            session()->put('checkout_user_id', $user->user_id);
+            session()->put('checkout_cart', $cart);
+            session()->put('checkout_total', $total);
+
+            // Trả về view auto submit để redirect sang VNPay
             return view('vnpay.auto_submit', [
-                'invoice_id' => $invoice->invoice_id,
-                'amount'     => $total,
-                'email'      => $user->email,
+                'amount' => $total,
+                'email'  => $user->email,
             ]);
         }
 
         return redirect()->back()->with('error', 'Phương thức thanh toán không hợp lệ.');
     }
+
 }

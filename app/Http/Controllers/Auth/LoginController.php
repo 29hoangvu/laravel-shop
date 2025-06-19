@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -8,57 +7,74 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function showLoginForm()
+    // Hiển thị form đăng nhập cho user
+    public function showUserLoginForm()
     {
-        return view('auth.login');
+        return view('auth.login_user');
     }
 
-    public function login(Request $request)
+    // Xử lý đăng nhập user
+    public function loginUser(Request $request)
     {
-        $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required|string',
-            'role'     => 'required|in:user,staff',
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        $credentials = [
-            'email'    => $request->email,    // khớp đúng cột DB
-            'password' => $request->password, // khớp đúng cột DB
-        ];
-
-
-        $role = $request->role;
-
-        if ($role === 'staff') {
-            if (Auth::guard('staff')->attempt($credentials)) {
-                // Đăng nhập thành công staff
-                $request->session()->regenerate();
-                session(['role' => 'staff']);
-                return redirect()->intended('/staff/dashboard');
-            }
-        } elseif ($role === 'user') {
-            if (Auth::guard('web')->attempt($credentials)) {
-                // Đăng nhập thành công user
-                $request->session()->regenerate();
-                session(['role' => 'user']);
-                return redirect()->intended('home');
-            }
+        if (Auth::guard('web')->attempt($credentials)) {
+            $request->session()->regenerate();
+            session(['role' => 'user']);
+            return redirect()->route('home');
         }
 
-        // Nếu không thành công
         return back()->withErrors([
-            'email' => 'Thông tin đăng nhập không chính xác hoặc vai trò không phù hợp.',
+            'email' => 'Sai thông tin đăng nhập.',
         ])->onlyInput('email');
     }
 
+    // Hiển thị form đăng nhập cho staff
+    public function showStaffLoginForm()
+    {
+        return view('auth.login_staff');
+    }
+
+    // Xử lý đăng nhập staff
+    public function loginStaff(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::guard('staff')->attempt($credentials)) {
+            $request->session()->regenerate();
+            session(['role' => 'staff']);
+            return redirect()->route('admindashboard.home.index');
+        }
+
+        return back()->withErrors([
+            'email' => 'Sai thông tin đăng nhập.',
+        ])->onlyInput('email');
+    }
+
+    // Đăng xuất chung
     public function logout(Request $request)
     {
-        $role = session('role', 'web');
-        Auth::guard($role)->logout();
+        // Xác định guard đang đăng nhập
+        if (Auth::guard('staff')->check()) {
+            Auth::guard('staff')->logout();
+            $redirectTo = route('login.staff');
+        } elseif (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+            $redirectTo = route('home');
+        } else {
+            $redirectTo = '/'; // fallback nếu không guard nào đăng nhập
+        }
 
+        // Huỷ phiên làm việc
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect($redirectTo);
     }
 }

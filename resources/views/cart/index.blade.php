@@ -3,12 +3,38 @@
 @section('title', 'Giỏ hàng')
 
 @section('content')
-{{-- Thêm max-w-6xl để giới hạn chiều rộng tối đa của container --}}
+<script>
+    function updateCartQuantity(productId, action) {
+        $.ajax({
+            url: "{{ route('cart.update') }}",
+            type: "POST",
+            data: {
+                product_id: productId,
+                action: action,
+            },
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert('Cập nhật giỏ hàng thất bại');
+                }
+            },
+            error: function() {
+                alert('Lỗi kết nối server');
+            }
+        });
+    }
+
+    function confirmRemove(productId) {
+        if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+            updateCartQuantity(productId, 'remove');
+        }
+    }
+</script>
 <div class="container mx-auto px-4 py-6 max-w-6xl">
     <h1 class="text-2xl font-bold mb-6">🛒 Giỏ hàng</h1>
 
     @if(count($products) > 0)
-    {{-- Đảm bảo justify-center được áp dụng khi đủ không gian --}}
     <div class="flex flex-col lg:flex-row gap-6 justify-center items-start">
         <div class="w-full lg:w-2/3 bg-white shadow-md rounded-lg p-4">
             <div class="overflow-x-auto">
@@ -46,8 +72,7 @@
                             </td>
                             <td class="py-4">{{ number_format($item['product']->price * $item['quantity'], 0, ',', '.') }} VNĐ</td>
                             <td class="py-4">
-                                <button type="button" class="text-red-500 hover:text-red-700"
-                                        onclick="updateCartQuantity('{{ $id }}', 'remove')">
+                                <button type="button" class="text-red-500 hover:text-red-700" onclick="confirmRemove('{{ $id }}')" title="Xóa sản phẩm">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -89,12 +114,6 @@
                 class="block mt-6 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded">
                 Tiến hành thanh toán
             </a>
-
-            {{-- <a href="{{ auth()->check() ? route('checkout') : route('login') }}"
-            class="block mt-6 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded">
-                Tiến hành thanh toán
-            </a> --}}
-
         </div>
     </div>
     @else
@@ -108,28 +127,6 @@
     </div>
     @endif
 </div>
-@endsection
 
-@section('scripts')
-<script>
-    function updateCartQuantity(productId, action) {
-        fetch('{{ route("cart.update") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            },
-            body: JSON.stringify({
-                product_id: productId,
-                action: action
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            }
-        });
-    }
-</script>
+
 @endsection
