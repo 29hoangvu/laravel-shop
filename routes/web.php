@@ -80,8 +80,13 @@ Route::get('/products/{category}', [ProductController::class, 'category'])->name
 
 
 // Admin dashboard
-Route::get('/admin/index', [DashBoardController::class, 'index'])->name('admin.home.index');
+
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('index', [DashBoardController::class, 'index'])->name('home.index');
+    Route::get('/data/time', [DashboardController::class, 'getTimeData']);
+    Route::get('/data/customer', [DashboardController::class, 'getCustomerData']);
+    Route::get('/data/product', [DashboardController::class, 'getProductData']);
+
     Route::get('/products', [ProductCrudController::class, 'index'])->name('products.index');
     Route::get('/products/create', [ProductCrudController::class, 'create'])->name('products.create'); // Route mới được thêm
     Route::post('/products', [ProductCrudController::class, 'store'])->name('products.store');

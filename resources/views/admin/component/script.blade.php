@@ -11,4 +11,15 @@
     document.getElementById('sidebarToggle').addEventListener('click', function() {
         document.getElementById('sidebar').classList.toggle('collapsed');
     });
+
+
     </script>
+      <script>
+        setTimeout(function() {
+            let alert = document.querySelector('.alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000); // 3 giây
+    </script>
+

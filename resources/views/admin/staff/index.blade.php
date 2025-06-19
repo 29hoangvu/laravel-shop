@@ -55,14 +55,7 @@
 </div>
 
 @include('admin.component.script')
-<script>
-    setTimeout(function() {
-        let alert = document.querySelector('.alert');
-        if (alert) {
-            alert.style.display = 'none';
-        }
-    }, 3000); // 3 giây
-</script>
+
 <script>
     $(document).ready(function() {
         // Initialize DataTable
