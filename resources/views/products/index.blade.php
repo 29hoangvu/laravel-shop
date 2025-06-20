@@ -1,17 +1,166 @@
-<pre>{{ dd($categories) }}</pre>
 @extends('layouts.app')
 
-@section('title', 'Sản phẩm')
+@section('title', 'Tất cả sản phẩm')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <!-- Sidebar Filters -->
+<style>
+    /* Breadcrumb */
+    nav.breadcrumb {
+        font-size: 0.9rem;
+        background-color: #f8f9fa;
+        box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 0.075);
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+    nav.breadcrumb .breadcrumb-item a {
+        color: #0d6efd;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    nav.breadcrumb .breadcrumb-item a:hover {
+        color: #0a58ca;
+        text-decoration: underline;
+    }
+    nav.breadcrumb .breadcrumb-item.active {
+        color: #6c757d;
+    }
+
+    .card {
+        border-radius: 1rem;
+        box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 0.1);
+        border: none;
+        margin-bottom: 1.5rem;
+    }
+    .card-header {
+        font-weight: 600;
+        font-size: 1.25rem;
+        padding: 0.75rem 1.25rem;
+        border-radius: 1rem 1rem 0 0;
+        border: none;
+    }
+    .card-header.bg-primary {
+        background-color: #0d6efd !important;
+        color: #fff;
+    }
+    .card-header.bg-secondary {
+        background-color: #6c757d !important;
+        color: #fff;
+    }
+
+    label.form-label {
+        font-weight: 600;
+    }
+
+    .input-group input.form-control {
+        border-radius: 0.375rem;
+    }
+
+    button.btn-primary {
+        font-weight: 600;
+        border-radius: 0.5rem;
+    }
+
+    ul.list-group-flush li.list-group-item {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        transition: background-color 0.3s ease;
+        margin-bottom: 0.25rem;
+    }
+    ul.list-group-flush li.list-group-item:hover {
+        background-color: #e9ecef;
+    }
+    ul.list-group-flush li.list-group-item a {
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        color: #212529;
+        font-weight: 500;
+    }
+
+    h2.fw-bold {
+        font-size: 2rem;
+        margin-bottom: 0;
+    }
+
+    span.text-muted.small {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .col-md-4.col-6.mb-4 {
+        display: flex;
+        justify-content: center;
+    }
+
+    @media (max-width: 992px) {
+        .col-md-3 {
+            margin-bottom: 1.5rem;
+        }
+        h2.fw-bold {
+            font-size: 1.5rem;
+        }
+    }
+    @media (max-width: 576px) {
+        h2.fw-bold {
+            font-size: 1.3rem;
+        }
+        .card-header {
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Horizontal product list */
+    .horizontal-scroll-wrapper {
+        display: flex;
+        overflow-x: auto;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        scroll-snap-type: x mandatory;
+    }
+
+    .product-horizontal-card {
+        flex: 0 0 auto;
+        width: 240px;
+        scroll-snap-align: start;
+    }
+
+    .horizontal-scroll-wrapper::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .horizontal-scroll-wrapper::-webkit-scrollbar-thumb {
+        background-color: #ced4da;
+        border-radius: 4px;
+    }
+
+    .horizontal-scroll-wrapper::-webkit-scrollbar-track {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="fas fa-store me-1"></i> Tất cả sản phẩm
+            </li>
+        </ol>
+    </nav>
+
+    <div class="row mt-4">
+        <!-- Sidebar -->
         <div class="col-md-3">
-            <div class="card mb-4">
-                <div class="card-header">Lọc sản phẩm</div>
+            <!-- Bộ lọc -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary">
+                    <i class="fas fa-filter me-1"></i> Lọc sản phẩm
+                </div>
                 <div class="card-body">
                     <form action="{{ route('products.index') }}" method="GET">
+                        <!-- Sắp xếp -->
                         <div class="mb-3">
                             <label for="sort" class="form-label">Sắp xếp theo</label>
                             <select class="form-select" id="sort" name="sort" onchange="this.form.submit()">
@@ -21,27 +170,34 @@
                                 <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Đánh giá cao</option>
                             </select>
                         </div>
-                        
+
+                        <!-- Khoảng giá -->
                         <div class="mb-3">
                             <label class="form-label">Khoảng giá</label>
-                            <div class="d-flex">
-                                <input type="number" class="form-control me-2" name="min_price" placeholder="Từ" value="{{ request('min_price') }}">
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="min_price" placeholder="Từ" value="{{ request('min_price') }}">
+                                <span class="input-group-text">-</span>
                                 <input type="number" class="form-control" name="max_price" placeholder="Đến" value="{{ request('max_price') }}">
                             </div>
                         </div>
-                        
-                        <button type="submit" class="btn btn-primary w-100">Áp dụng</button>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-2">
+                            <i class="fas fa-check-circle me-1"></i>Áp dụng
+                        </button>
                     </form>
                 </div>
             </div>
-            
-            <div class="card">
-                <div class="card-header">Danh mục</div>
-                <div class="card-body">
+
+            <!-- Danh mục -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary">
+                    <i class="fas fa-list me-1"></i> Danh mục
+                </div>
+                <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
                         @foreach($categories as $category)
                         <li class="list-group-item">
-                            <a href="{{ route('products.category', $category->category_id) }}" class="text-decoration-none">
+                            <a href="{{ route('products.category', $category->category_id) }}">
                                 {{ $category->name }}
                             </a>
                         </li>
@@ -50,28 +206,30 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Product Listing -->
+
+        <!-- Danh sách sản phẩm -->
         <div class="col-md-9">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1>Tất cả sản phẩm</h1>
-                <span>Hiển thị {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} của {{ $products->total() ?? 0 }} sản phẩm</span>
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                <h2 class="fw-bold">Tất cả sản phẩm</h2>
+                <span class="text-muted small">
+                    Hiển thị {{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }} / {{ $products->total() ?? 0 }} sản phẩm
+                </span>
             </div>
-            
-            <div class="row">
+
+            <div class="horizontal-scroll-wrapper mb-4">
                 @forelse($products as $product)
-                <div class="col-md-4 col-6 mb-4">
+                <div class="product-horizontal-card">
                     @include('products.product-card', ['product' => $product])
                 </div>
                 @empty
-                <div class="col-12">
-                    <div class="alert alert-info">
+                <div class="w-100 text-center">
+                    <div class="alert alert-info text-center py-4">
                         Không có sản phẩm nào phù hợp với tiêu chí lọc.
                     </div>
                 </div>
                 @endforelse
             </div>
-            
+
             <div class="d-flex justify-content-center mt-4">
                 {{ $products->appends(request()->query())->links() }}
             </div>

@@ -17,10 +17,10 @@ class InvoiceDetail extends Model
         return $this->belongsTo(Invoice::class, 'invoice_id', 'invoice_id');
     }
 
+
     public function product()
     {
         // Đây phải là tên khóa ngoại trong bảng invoice_detail và khóa chính bảng products
         return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
 }
-

@@ -7,11 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = null; // Không sử dụng updated_at
+
     use HasFactory;
 
     protected $primaryKey = 'product_id';
-
-    public $timestamps = true;
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
 
     protected $fillable = [
         'staff_id',
@@ -55,4 +61,5 @@ class Product extends Model
     {
         return $this->hasMany(InvoiceDetail::class, 'product_id', 'product_id');
     }
+
 }

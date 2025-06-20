@@ -77,3 +77,4 @@ class User extends Authenticatable
         return $this->hasMany(Invoice::class, 'user_id', 'user_id');
     }
 }
+

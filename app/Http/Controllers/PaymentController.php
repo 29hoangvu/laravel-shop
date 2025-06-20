@@ -119,5 +119,4 @@ class PaymentController extends Controller
 
         return redirect()->route('home')->with('error', 'Thanh toán thất bại hoặc bị hủy! Đơn hàng chưa được tạo.');
     }
-
 }

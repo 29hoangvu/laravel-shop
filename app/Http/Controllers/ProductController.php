@@ -80,8 +80,7 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
-
-        // ✅ Chỉ ghi nhận điểm nếu người dùng đã đăng nhập
+        // ✅ Ghi nhận điểm nếu người dùng đã đăng nhập
         if (Auth::check()) {
             $userId = Auth::id();
             $categoryId = $product->category_id;
@@ -91,11 +90,9 @@ class ProductController extends Controller
                 ->first();
 
             if ($favorite) {
-                $pointsToAdd = 1;
-                // ✅ Update query trực tiếp
                 Favorite::where('user_id', $userId)
                     ->where('category_id', $categoryId)
-                    ->increment('score', $pointsToAdd);
+                    ->increment('score', 1);
             } else {
                 Favorite::create([
                     'user_id' => $userId,
@@ -104,9 +101,6 @@ class ProductController extends Controller
                 ]);
             }
         }
-
-
-
         $relatedProducts = Product::where('Category_id', $product->Category_id)
             ->where('Product_id', '!=', $id)
             ->take(4)

@@ -47,4 +47,6 @@ class HomeController extends Controller
             'recommendedProducts'
         ));
     }
+
 }
+

@@ -3,6 +3,122 @@
 @section('title', 'Trang chủ')
 
 @section('content')
+
+<style>
+    .homepage-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .sidebar {
+        flex: 1 1 220px;
+        max-width: 250px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .sidebar h2 {
+        font-size: 20px;
+        margin-bottom: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar li {
+        margin-bottom: 12px;
+    }
+
+    .sidebar a {
+        text-decoration: none;
+        color: #444;
+        display: flex;
+        align-items: center;
+        transition: color 0.2s ease;
+    }
+
+    .sidebar a:hover {
+        color: #0ea5e9;
+    }
+
+    .sidebar i {
+        margin-right: 8px;
+        color: #0ea5e9;
+    }
+
+    .banner {
+        flex: 3;
+        min-width: 300px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .banner img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .homepage-container {
+            flex-direction: column;
+        }
+
+        .sidebar, .banner {
+            max-width: 100%;
+        }
+    }
+</style>
+
+<div class="homepage-container">
+    <!-- Sidebar danh mục -->
+    <aside class="sidebar">
+        <h2>Danh mục sản phẩm</h2>
+        <ul>
+            @php
+                $categories = [
+                    ['label' => 'Điện thoại', 'id' => 1],
+                    ['label' => 'Laptop', 'id' => 2],
+                    ['label' => 'Phụ kiện', 'id' => 3],
+                    ['label' => 'Bàn phím', 'id' => 4],
+                    ['label' => 'Chuột', 'id' => 5],
+                    ['label' => 'Smartwatch', 'id' => 6],
+                ];
+            @endphp
+            @foreach($categories as $category)
+                <li>
+                    <a href="{{ route('products.category', $category['id']) }}">
+                        <i class="fas fa-angle-right"></i> {{ $category['label'] }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </aside>
+
+    <!-- Ảnh quảng cáo -->
+    <div class="banner">
+        <img src="{{ asset('./storage/images/qc1.png') }}" alt="Ảnh quảng cáo">
+        <img src="{{ asset('./storage/images/qc2.png') }}" alt="Ảnh quảng cáo">
+    </div>
+    <div class="banner">
+        <img src="{{ asset('./storage/images/qc3.png') }}" alt="Ảnh quảng cáo">
+        <img src="{{ asset('./storage/images/qc4.png') }}" alt="Ảnh quảng cáo">
+    </div>
+</div>
+
+<!-- Sản phẩm dành cho bạn -->
 <div class="container py-5">
     @if (!empty($recommendedProducts) && $recommendedProducts->count())
         <div class="mb-4">
@@ -17,23 +133,5 @@
             @endforeach
         </div>
     @endif
-
-    <div class="mb-4">
-        <h2 class="text-center">Tất cả sản phẩm</h2>
-    </div>
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        @forelse($products as $product)
-            <div>
-                @include('products.product-card', ['product' => $product])
-            </div>
-        @empty
-            <p class="col-span-full text-center">Hiện chưa có sản phẩm nào.</p>
-        @endforelse
-    </div>
-
-    <div class="flex justify-center mt-4">
-        {{ $products->links() }}
-    </div>
 </div>
 @endsection
