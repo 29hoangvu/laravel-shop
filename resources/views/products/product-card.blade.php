@@ -191,7 +191,7 @@
                data-product-id="{{ $product->product_id }}"
                data-bs-toggle="tooltip"
                title="Thêm vào yêu thích">
-                @if(Auth::check() && Auth::user()->favorites->contains($product->product_id))
+                @if(Auth::check() && Auth::user()->favorite->contains($product->product_id))
                     <i class="fas fa-heart" style="color: #ef4444;"></i>
 
                 @else

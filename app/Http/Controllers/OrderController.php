@@ -12,7 +12,8 @@ class OrderController extends Controller
     {
         $user = Auth::user();
 
-        $invoices = Invoice::where('user_id', $user->user_id)
+        $invoices = Invoice::with(['details.product']) // 👈 thêm dòng này
+                    ->where('user_id', $user->user_id)
                     ->orderBy('created_at', 'desc')
                     ->get();
 

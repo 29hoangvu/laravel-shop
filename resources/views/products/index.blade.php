@@ -151,61 +151,67 @@
     </nav>
 
     <div class="row mt-4">
-        <!-- Sidebar -->
-        <div class="col-md-3">
-            <!-- Bộ lọc -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary">
-                    <i class="fas fa-filter me-1"></i> Lọc sản phẩm
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('products.index') }}" method="GET">
-                        <!-- Sắp xếp -->
-                        <div class="mb-3">
-                            <label for="sort" class="form-label">Sắp xếp theo</label>
-                            <select class="form-select" id="sort" name="sort" onchange="this.form.submit()">
-                                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
-                                <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Giá tăng dần</option>
-                                <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Giá giảm dần</option>
-                                <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Đánh giá cao</option>
-                            </select>
-                        </div>
+        <!-- Sidebar -->     
+        <!-- Danh mục (Hàng 2) -->
+        <div class="bg-white p-4 rounded-xl shadow mb-6">
+            <div class="flex flex-wrap gap-3">
+                @foreach($categories as $category)
+                    @php
+                        // Gán icon theo tên danh mục
+                        $icons = [
+                            'Điện thoại' => 'fa-mobile-alt',
+                            'Laptop' => 'fa-laptop',
+                            'Tablet' => 'fa-tablet-alt',
+                            'Phụ kiện' => 'fa-headphones',
+                            'Smartwatch' => 'fa-clock',
+                            'Máy ảnh' => 'fa-camera',
+                        ];
+                        $icon = $icons[$category->name] ?? 'fa-tag';
+                    @endphp
 
-                        <!-- Khoảng giá -->
-                        <div class="mb-3">
-                            <label class="form-label">Khoảng giá</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" name="min_price" placeholder="Từ" value="{{ request('min_price') }}">
-                                <span class="input-group-text">-</span>
-                                <input type="number" class="form-control" name="max_price" placeholder="Đến" value="{{ request('max_price') }}">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100 mt-2">
-                            <i class="fas fa-check-circle me-1"></i>Áp dụng
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Danh mục -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-secondary">
-                    <i class="fas fa-list me-1"></i> Danh mục
-                </div>
-                <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
-                        @foreach($categories as $category)
-                        <li class="list-group-item">
-                            <a href="{{ route('products.category', $category->category_id) }}">
-                                {{ $category->name }}
-                            </a>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
+                    <a href="{{ route('products.category', $category->category_id) }}"
+                    class="inline-flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+                        <i class="fas {{ $icon }} text-blue-500"></i> {{ $category->name }}
+                    </a>
+                @endforeach
             </div>
         </div>
+        <div class="bg-white p-4 rounded-xl shadow mb-4">
+            <form action="{{ route('products.index') }}" method="GET" class="flex flex-col lg:flex-row lg:items-end gap-4 flex-wrap">
+                <!-- Sắp xếp -->
+                <div>
+                    <label for="sort" class="block text-sm font-semibold text-gray-700 mb-1">Sắp xếp theo</label>
+                    <select name="sort" id="sort" onchange="this.form.submit()"
+                        class="w-48 border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
+                        <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Giá tăng dần</option>
+                        <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Giá giảm dần</option>
+                        <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Đánh giá cao</option>
+                    </select>
+                </div>
+
+                <!-- Khoảng giá -->
+                <div class="flex items-center gap-2 flex-wrap">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Giá từ</label>
+                        <input type="number" name="min_price" placeholder="Từ" value="{{ request('min_price') }}"
+                            class="w-24 border border-gray-300 rounded-md px-2 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Đến</label>
+                        <input type="number" name="max_price" placeholder="Đến" value="{{ request('max_price') }}"
+                            class="w-24 border border-gray-300 rounded-md px-2 py-2 text-sm">
+                    </div>
+                </div>
+
+                <div class="self-end">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md">
+                        <i class="fas fa-filter mr-1"></i> Lọc
+                    </button>
+                </div>
+            </form>
+        </div>
+
 
         <!-- Danh sách sản phẩm -->
         <div class="col-md-9">
