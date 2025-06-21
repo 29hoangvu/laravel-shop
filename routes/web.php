@@ -73,8 +73,13 @@ Route::get('/products/{id}', [ProductController::class, 'show'])->name('products
 Route::get('/products/category/{id}', [ProductController::class, 'category'])->name('products.category');
 
 // Admin dashboard
-Route::get('/admin/index', [DashBoardController::class, 'index'])->name('admindashboard.home.index');
-Route::prefix('admin')->name('admindashboard.')->group(function () {
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('index', [DashBoardController::class, 'index'])->name('home.index');
+    Route::get('/data/time', [DashboardController::class, 'getTimeData']);
+    Route::get('/data/customer', [DashboardController::class, 'getCustomerData']);
+    Route::get('/data/product', [DashboardController::class, 'getProductData']);
+
     Route::get('/products', [ProductCrudController::class, 'index'])->name('products.index');
     Route::get('/products/create', [ProductCrudController::class, 'create'])->name('products.create'); // Route mới được thêm
     Route::post('/products', [ProductCrudController::class, 'store'])->name('products.store');
