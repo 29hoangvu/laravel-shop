@@ -63,17 +63,15 @@ class InvoiceCrudController extends Controller
             ->findOrFail($id);
 
         $orderStatuses = [
-            'new' => 'Đơn hàng mới',
             'pending' => 'Đang xử lý',
-            'processing' => 'Đang chuẩn bị',
-            'shipped' => 'Đã giao vận',
+            'shipped' => 'Đang giao tới',
             'delivered' => 'Đã giao hàng',
             'cancelled' => 'Đã hủy'
         ];
 
         $paymentStatuses = [
             'pending' => 'Chờ thanh toán',
-            'completed' => 'Đã thanh toán',
+            'paid' => 'Đã thanh toán',
             'failed' => 'Thanh toán thất bại',
             'refunded' => 'Đã hoàn tiền'
         ];
@@ -89,7 +87,7 @@ class InvoiceCrudController extends Controller
         $invoice = Invoice::findOrFail($id);
 
         $request->validate([
-            'payment_status' => 'required|in:pending,completed,failed,refunded',
+            'payment_status' => 'required|in:pending,paid,failed,refunded',
             'order_status' => 'required|in:new,pending,processing,shipped,delivered,cancelled',
         ], [
             'payment_status.required' => 'Trạng thái thanh toán là bắt buộc.',
@@ -152,8 +150,8 @@ class InvoiceCrudController extends Controller
         $stats = [
             'total_invoices' => Invoice::count(),
             'pending_orders' => Invoice::where('order_status', 'pending')->count(),
-            'completed_payments' => Invoice::where('payment_status', 'completed')->count(),
-            'total_revenue' => Invoice::where('payment_status', 'completed')->sum('total'),
+            'completed_payments' => Invoice::where('payment_status', 'paid')->count(),
+            'total_revenue' => Invoice::where('payment_status', 'paid')->sum('total'),
         ];
 
         return response()->json($stats);

@@ -7,7 +7,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <!-- Peity -->
-<<script>
+<script>
     document.getElementById('sidebarToggle').addEventListener('click', function() {
         document.getElementById('sidebar').classList.toggle('collapsed');
     });

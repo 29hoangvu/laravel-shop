@@ -47,7 +47,7 @@
                                 @case('pending')
                                     <span class="badge bg-warning">Chờ thanh toán</span>
                                     @break
-                                @case('completed')
+                                @case('paid')
                                     <span class="badge bg-success">Đã thanh toán</span>
                                     @break
                                 @case('failed')
@@ -62,18 +62,14 @@
                         </td>
                         <td>
                             @switch($invoice->order_status)
-                                @case('new')
-                                    <span class="badge bg-primary">Đơn hàng mới</span>
-                                    @break
+
                                 @case('pending')
                                     <span class="badge bg-warning">Đang xử lý</span>
                                     @break
-                                @case('processing')
-                                    <span class="badge bg-info">Đang chuẩn bị</span>
-                                    @break
                                 @case('shipped')
-                                    <span class="badge bg-secondary">Đã giao vận</span>
+                                 <span class="badge bg-secondary">Đang giao vận</span>
                                     @break
+
                                 @case('delivered')
                                     <span class="badge bg-success">Đã giao hàng</span>
                                     @break

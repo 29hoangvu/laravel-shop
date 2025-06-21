@@ -13,7 +13,7 @@ class DashboardController extends Controller
     {
         // Lấy số liệu tổng quan
         $invoiceCount = DB::table('invoice')->count();
-        $invoiceCompletedCount = DB::table('invoice')->where('payment_status', 'completed')->count();
+        $invoiceCompletedCount = DB::table('invoice')->where('payment_status', 'paid')->count();
         $productCount = DB::table('products')->count();
 
         return view('admin.home.index', compact('invoiceCount', 'invoiceCompletedCount', 'productCount'));
@@ -31,7 +31,7 @@ class DashboardController extends Controller
                 DB::raw('SUM(total) as revenue')
             )
             ->whereBetween(DB::raw('DATE(created_at)'), [$fromDate, $toDate])
-            ->where('payment_status', 'completed')
+            ->where('payment_status', 'paid')
             ->groupBy(DB::raw('DATE(created_at)'))
             ->orderBy('date')
             ->get();
@@ -39,7 +39,7 @@ class DashboardController extends Controller
         return response()->json($timeData);
     }
 
-   
+
 
     public function getCustomerData()
     {
@@ -50,7 +50,7 @@ class DashboardController extends Controller
                 DB::raw('COUNT(invoice.Invoice_id) as orders'),
                 DB::raw('SUM(invoice.total) as total')
             )
-            ->where('invoice.payment_status', 'completed')
+            ->where('invoice.payment_status', 'paid')
             ->groupBy('users.user_id', 'users.name')
             ->orderBy('total', 'desc')
             ->limit(10)
@@ -69,7 +69,7 @@ class DashboardController extends Controller
                 DB::raw('SUM(invoice_detail.quantity) as quantity'),
                 DB::raw('SUM(invoice_detail.quantity * invoice_detail.price) as revenue')
             )
-            ->where('invoice.payment_status', 'completed')
+            ->where('invoice.payment_status', 'paid')
             ->groupBy('products.product_id', 'products.name')
             ->orderBy('revenue', 'desc')
             ->limit(10)
