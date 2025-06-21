@@ -101,9 +101,6 @@
                             class="absolute right-0 hidden group-hover:block bg-white shadow-md mt-2 rounded min-w-[150px] text-gray-700 z-50">
                             <li><a href="{{ route('profile.edit') }}"
                                    class="block px-4 py-2 hover:bg-gray-100">Tài khoản</a></li>
-                            <li><a href="{{ route('favorites.index') }}"
-                                   class="block px-4 py-2 hover:bg-gray-100">Yêu thích</a></li>
-
                                    <li><a href="{{ route('orders') }}"
                                    class="block px-4 py-2 hover:bg-gray-100">Đơn hàng</a></li>
                             <li><hr class="my-1 border-gray-200"></li>

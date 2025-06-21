@@ -36,6 +36,6 @@ class StaffRegisterController extends Controller
             'address'  => $request->address,
         ]);
 
-        return redirect()->route('admindashboard.index')->with('success', 'Staff registered successfully.');
+        return redirect()->route('admin.home.index')->with('success', 'Staff registered successfully.');
     }
 }

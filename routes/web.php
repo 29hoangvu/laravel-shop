@@ -111,7 +111,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/invoice/{id}/edit', [InvoiceCrudController::class, 'edit'])->name('invoice.edit');
     Route::put('/invoice/{id}', [InvoiceCrudController::class, 'update'])->name('invoice.update');
     Route::delete('/invoice/{id}', [InvoiceCrudController::class, 'destroy'])->name('invoice.destroy');
-    Route::get('/admin/invoice/{id}', [InvoiceCrudController::class, 'show'])->name('admindashboard.invoice.show');
+    Route::get('/admin/invoice/{id}', [InvoiceCrudController::class, 'show'])->name('admin.invoice.show');
 });
 
 //Payment

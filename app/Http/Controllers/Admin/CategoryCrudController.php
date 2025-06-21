@@ -14,8 +14,7 @@ class CategoryCrudController extends Controller
     public function index()
     {
         $categories = Category::orderBy('category_id', 'desc')->get();
-
-        return view('admindashboard.category.index', compact('categories'));
+        return view('admin.category.index', compact('categories'));
     }
 
     /**
@@ -23,9 +22,7 @@ class CategoryCrudController extends Controller
      */
     public function create()
     {
-
-        return view('admindashboard.category.create');
-
+        return view('admin.category.create');
     }
 
     /**
@@ -46,8 +43,8 @@ class CategoryCrudController extends Controller
                 'name' => $request->name,
                 'description' => $request->description,
             ]);
-            return redirect()->route('admindashboard.category.index')
 
+            return redirect()->route('admin.category.index')
                 ->with('success', 'Thêm danh mục thành công!');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -62,7 +59,7 @@ class CategoryCrudController extends Controller
     public function show(string $id)
     {
         $category = Category::findOrFail($id);
-        return view('admindashboard.category.show', compact('category'));
+        return view('admin.category.show', compact('category'));
     }
 
     /**
@@ -71,7 +68,7 @@ class CategoryCrudController extends Controller
     public function edit(string $id)
     {
         $category = Category::findOrFail($id);
-        return view('admindashboard.category.edit', compact('category'));
+        return view('admin.category.edit', compact('category'));
     }
 
     /**
@@ -96,7 +93,8 @@ class CategoryCrudController extends Controller
             ];
 
             $category->update($updateData);
-            return redirect()->route('admindashboard.category.index')
+
+            return redirect()->route('admin.category.index')
                 ->with('success', 'Cập nhật danh mục thành công!');
         } catch (\Exception $e) {
             return redirect()->back()

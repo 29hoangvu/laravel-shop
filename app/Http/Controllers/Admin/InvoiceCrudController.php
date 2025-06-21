@@ -20,7 +20,8 @@ class InvoiceCrudController extends Controller
         $invoices = Invoice::with('user')
             ->orderBy('Invoice_id', 'desc')
             ->get();
-        return view('admindashboard.invoice.index', compact('invoices'));
+
+        return view('admin.invoice.index', compact('invoices'));
     }
 
     /**
@@ -29,7 +30,7 @@ class InvoiceCrudController extends Controller
     public function create()
     {
         // Typically invoices are created by customers, not admin
-        return redirect()->route('admindashboard.invoice.index')
+        return redirect()->route('admin.invoice.index')
             ->with('info', 'Hóa đơn được tạo bởi khách hàng khi đặt hàng.');
     }
 
@@ -39,7 +40,7 @@ class InvoiceCrudController extends Controller
     public function store(Request $request)
     {
         // Invoices are typically created by the system when orders are placed
-        return redirect()->route('admindashboard.invoice.index');
+        return redirect()->route('admin.invoice.index');
     }
 
     /**
@@ -49,7 +50,8 @@ class InvoiceCrudController extends Controller
     {
         $invoice = Invoice::with(['user', 'invoiceDetails.product'])
             ->findOrFail($id);
-        return view('admindashboard.invoice.show', compact('invoice'));
+
+        return view('admin.invoice.show', compact('invoice'));
     }
 
     /**
@@ -75,7 +77,8 @@ class InvoiceCrudController extends Controller
             'failed' => 'Thanh toán thất bại',
             'refunded' => 'Đã hoàn tiền'
         ];
-        return view('admindashboard.invoice.edit', compact('invoice', 'orderStatuses', 'paymentStatuses'));
+
+        return view('admin.invoice.edit', compact('invoice', 'orderStatuses', 'paymentStatuses'));
     }
 
     /**
@@ -100,7 +103,8 @@ class InvoiceCrudController extends Controller
                 'payment_status' => $request->payment_status,
                 'order_status' => $request->order_status,
             ]);
-            return redirect()->route('admindashboard.invoice.index')
+
+            return redirect()->route('admin.invoice.index')
                 ->with('success', 'Cập nhật hóa đơn thành công!');
         } catch (\Exception $e) {
             return redirect()->back()

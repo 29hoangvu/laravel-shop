@@ -119,15 +119,6 @@
                         {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}>
                         <i class="fas fa-cart-plus mr-1"></i> Thêm vào giỏ hàng
                     </button>
-
-                    <a href="#" class="flex items-center gap-1 px-4 py-2 border rounded text-red-500 border-red-500 hover:bg-red-100 transition toggle-favorite"
-                    data-product-id="{{ $product->product_id }}">
-                        @if(Auth::check() && Auth::user()->favorite->contains($product->product_id))
-                            <i class="fas fa-heart"></i> Đã yêu thích
-                        @else
-                            <i class="far fa-heart"></i> Yêu thích
-                        @endif
-                    </a>
                 </div>
             </form>
 

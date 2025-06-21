@@ -49,7 +49,7 @@ class LoginController extends Controller
         if (Auth::guard('staff')->attempt($credentials)) {
             $request->session()->regenerate();
             session(['role' => 'staff']);
-            return redirect()->route('admindashboard.home.index');
+            return redirect()->route('admin.home.index');
         }
 
         return back()->withErrors([

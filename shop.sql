@@ -72,8 +72,10 @@ CREATE TABLE `invoice` (
   `created_at` datetime DEFAULT NULL,
   `total` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-ALTER TABLE invoice CHANGE `Invoice_id` `invoice_id` INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE invoice CHANGE `invoice_id` `invoice_id` INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `invoice` ADD PRIMARY KEY (`invoice_id`);
 select * from invoice;
+SHOW CREATE TABLE invoice;
 delete from invoice;
 
 CREATE TABLE `invoice_detail` (
@@ -176,6 +178,7 @@ CREATE TABLE `staff` (
   `phone` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 ALTER TABLE staff AUTO_INCREMENT = 1;
+ALTER TABLE staff MODIFY staff_id INT NOT NULL AUTO_INCREMENT;
 select * from staff;
 delete from staff;
 
@@ -187,7 +190,8 @@ CREATE TABLE `users` (
   `address` varchar(255) DEFAULT NULL,
   `phone` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;	
-
+ALTER TABLE users AUTO_INCREMENT = 1;
+ALTER TABLE users MODIFY user_id INT NOT NULL AUTO_INCREMENT;
 select * from users;
 delete from users;
 
