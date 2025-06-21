@@ -11,8 +11,8 @@ class DashBoardController extends Controller
         $productCount = Product::count();
         $invoiceCount = Invoice::count();
         $invoiceCompletedCount = Invoice::where('order_status','completed')->count();
-
-        return view('admin.home.index',compact('productCount','invoiceCount','invoiceCompletedCount'));
+        return view('admindashboard.home.index',compact('productCount','invoiceCount','invoiceCompletedCount'));
     }
 
 }
+

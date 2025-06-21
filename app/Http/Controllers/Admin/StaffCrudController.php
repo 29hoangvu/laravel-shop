@@ -14,7 +14,9 @@ class StaffCrudController extends Controller
     public function index()
     {
         $staff = Staff::orderBy('staff_id', 'desc')->get();
-        return view('admin.staff.index', compact('staff'));
+
+        return view('admindashboard.staff.index', compact('staff'));
+
     }
 
     /**
@@ -22,7 +24,8 @@ class StaffCrudController extends Controller
      */
     public function create()
     {
-        return view('admin.staff.create');
+
+        return view('admindashboard.staff.create');
     }
 
     /**
@@ -60,7 +63,8 @@ class StaffCrudController extends Controller
                 'address' => $request->address,
             ]);
 
-            return redirect()->route('admin.staff.index')
+            return redirect()->route('admindashboard.staff.index')
+
                 ->with('success', 'Thêm nhân viên thành công!');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -75,7 +79,8 @@ class StaffCrudController extends Controller
     public function show(string $id)
     {
         $staff = Staff::findOrFail($id);
-        return view('admin.staff.show', compact('staff'));
+        return view('admindashboard.staff.show', compact('staff'));
+
     }
 
     /**
@@ -84,7 +89,7 @@ class StaffCrudController extends Controller
     public function edit(string $id)
     {
         $staff = Staff::findOrFail($id);
-        return view('admin.staff.edit', compact('staff'));
+        return view('admindashboard.staff.edit', compact('staff'));
     }
 
     /**
@@ -134,7 +139,8 @@ class StaffCrudController extends Controller
 
             $staff->update($updateData);
 
-            return redirect()->route('admin.staff.index')
+            return redirect()->route('admindashboard.staff.index')
+
                 ->with('success', 'Cập nhật nhân viên thành công!');
         } catch (\Exception $e) {
             return redirect()->back()

@@ -32,4 +32,5 @@ class Category extends Model
     {
         return $this->hasMany(Favorite::class, 'category_id', 'category_id');
     }
+
 }

@@ -15,7 +15,7 @@ return [
 
         'staff' => [
             'driver' => 'session',
-            'provider' => 'staff',
+            'provider' => 'staffs',
         ],
     ],
 
@@ -25,7 +25,7 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'staff' => [
+        'staffs' => [
             'driver' => 'eloquent',
             'model' => App\Models\Staff::class,
         ],

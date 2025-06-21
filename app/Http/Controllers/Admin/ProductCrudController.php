@@ -18,13 +18,12 @@ class ProductCrudController extends Controller
     {
         $products = Product::with(['staff', 'category'])->get();
         $categories = Category::all();
-
-        return view('admin.products.index', compact('products', 'categories'));
+        return view('admindashboard.products.index', compact('products', 'categories'));
     }
     public function create()
     {
         $categories = Category::all();
-        return view('admin.products.create', compact('categories'));
+        return view('admindashboard.products.create', compact('categories'));
     }
     /**
      * Display the admin management page.
@@ -175,9 +174,9 @@ class ProductCrudController extends Controller
         try {
             $product = Product::findOrFail($id);
             $categories = Category::all();
-            return view('admin.products.edit', compact('product', 'categories'));
+            return view('admindashboard.products.edit', compact('product', 'categories'));
         } catch (\Exception $e) {
-            return redirect()->route('admin.products.index')->with('error', 'Không tìm thấy sản phẩm!');
+            return redirect()->route('admindashboard.products.index')->with('error', 'Không tìm thấy sản phẩm!');
         }
     }
 

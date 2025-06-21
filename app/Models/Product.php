@@ -13,14 +13,11 @@ class Product extends Model
     use HasFactory;
 
     protected $primaryKey = 'product_id';
-
     /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
-
-
     protected $fillable = [
         'staff_id',
         'category_id',
@@ -63,4 +60,5 @@ class Product extends Model
     {
         return $this->hasMany(InvoiceDetail::class, 'product_id', 'product_id');
     }
+
 }
